@@ -54,12 +54,12 @@ const FormCreateFungible = ({ back, next }) => {
     const customClasses = useCustomStyles();
 
     const [ rootState, rootDispatch ] = useContext(RootContext);
-    const { connectionState, createParticleData } = rootState;
+    const { connectionState, tentListingData } = rootState;
 
-    const mintableMaxSupply = _.parseInt((createParticleData.supply > 0) ? createParticleData.supply : _amountToMintInputOptions.max, 10);
+    const mintableMaxSupply = _.parseInt((tentListingData.supply > 0) ? tentListingData.supply : _amountToMintInputOptions.max, 10);
     const mintableStep = Math.max(_.round(mintableMaxSupply / 1000), 1);
 
-    let mintAmount = createParticleData.amountToMint || 0;
+    let mintAmount = tentListingData.amountToMint || 0;
     if (mintAmount > mintableMaxSupply) {
         mintAmount = mintableMaxSupply;
     }
@@ -67,7 +67,7 @@ const FormCreateFungible = ({ back, next }) => {
 
     const [amountToMint,    setAmountToMint]    = useState(mintAmount);
     const [amountToReserve, setAmountToReserve] = useState(reserve);
-    const [ethPerToken,     setEthPerToken]     = useState(createParticleData.ethPerToken || 0);
+    const [ethPerToken,     setEthPerToken]     = useState(tentListingData.ethPerToken || 0);
 
     useEffect(() => {
         const formData = _getFormData();
@@ -156,7 +156,7 @@ const FormCreateFungible = ({ back, next }) => {
                             </Grid>
                             <Grid item xs={6}>
                                 <FormControl fullWidth variant="outlined">
-                                    <InputLabel htmlFor="particleTypeSupply">Amount to {createParticleData.isPrivate ? 'Reserve' : 'Sell'}</InputLabel>
+                                    <InputLabel htmlFor="particleTypeSupply">Amount to {tentListingData.isPrivate ? 'Reserve' : 'Sell'}</InputLabel>
                                     <OutlinedInput
                                         id="amountToReserve"
                                         value={amountToReserve}
@@ -185,7 +185,7 @@ const FormCreateFungible = ({ back, next }) => {
                     </Grid>
                     <Grid item xs={4}>
                         {
-                            !createParticleData.isPrivate && (
+                            !tentListingData.isPrivate && (
                                 <FormControl fullWidth variant="outlined">
                                     <InputLabel htmlFor="ethPerToken">Token Price</InputLabel>
                                     <OutlinedInput
@@ -193,10 +193,10 @@ const FormCreateFungible = ({ back, next }) => {
                                         startAdornment={<InputAdornment position="start">ETH</InputAdornment>}
                                         onChange={_updateEthPerToken}
                                         onBlur={_handleEthPerTokenBlur}
-                                        value={createParticleData.isPrivate ? 0 : ethPerToken}
+                                        value={tentListingData.isPrivate ? 0 : ethPerToken}
                                         fullWidth
                                         labelWidth={100}
-                                        disabled={createParticleData.isPrivate}
+                                        disabled={tentListingData.isPrivate}
                                         inputProps={_ethPerTokenOptions}
                                     />
                                 </FormControl>

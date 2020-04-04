@@ -64,25 +64,25 @@ const _maxSupplyInputOptions = {
 };
 
 // Create Route
-const FormCreateCommon = ({ back, next }) => {
+const CreateCommon = ({ back, next }) => {
     const classes = useRootStyles();
     const customClasses = useCustomStyles();
 
     const [ rootState, rootDispatch ] = useContext(RootContext);
-    const { connectionState, createParticleData } = rootState;
+    const { connectionState, tentListingData } = rootState;
 
     const [ walletState ] = useContext(WalletContext);
     const { allReady, connectedAddress } = walletState;
 
-    const [particleName,        setParticleName]        = useState(createParticleData.name || '');
-    const [particleDesc,        setParticleDesc]        = useState(createParticleData.desc || '');
-    const [particleSymbol,      setParticleSymbol]      = useState(createParticleData.symbol || '');
-    const [particleCreator,     setParticleCreator]     = useState(createParticleData.creator || '');
-    const [particleIcon,        setParticleIcon]        = useState(createParticleData.icon || 'Upload Icon *');
-    const [particleIconBuffer,  setParticleIconBuffer]  = useState(createParticleData.iconBuffer || null);
-    const [particleIconBase64,  setParticleIconBase64]  = useState(createParticleData.iconBase64 || null);
-    const [particleSupply,      setParticleSupply]      = useState(createParticleData.supply || 0);
-    const [isPrivate,           setPrivate]             = useState(createParticleData.isPrivate || false);
+    const [particleName,        setParticleName]        = useState(tentListingData.name || '');
+    const [particleDesc,        setParticleDesc]        = useState(tentListingData.desc || '');
+    const [particleSymbol,      setParticleSymbol]      = useState(tentListingData.symbol || '');
+    const [particleCreator,     setParticleCreator]     = useState(tentListingData.creator || '');
+    const [particleIcon,        setParticleIcon]        = useState(tentListingData.icon || 'Upload Icon *');
+    const [particleIconBuffer,  setParticleIconBuffer]  = useState(tentListingData.iconBuffer || null);
+    const [particleIconBase64,  setParticleIconBase64]  = useState(tentListingData.iconBase64 || null);
+    const [particleSupply,      setParticleSupply]      = useState(tentListingData.supply || 0);
+    const [isPrivate,           setPrivate]             = useState(tentListingData.isPrivate || false);
     const [formValidated,       setFormValidated]       = useState(false);
 
     const [isParticleNameValid,    setParticleNameValid]    = useState(true);
@@ -419,4 +419,4 @@ const FormCreateCommon = ({ back, next }) => {
     );
 }
 
-export default FormCreateCommon;
+export default CreateCommon;

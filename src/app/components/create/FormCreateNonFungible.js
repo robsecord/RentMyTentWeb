@@ -30,11 +30,11 @@ const FormCreateNonFungible = ({ back, next }) => {
     const classes = useRootStyles();
 
     const [ rootState, rootDispatch ] = useContext(RootContext);
-    const { createParticleData } = rootState;
+    const { tentListingData } = rootState;
 
-    const [particleAssetPair,   setParticleAssetPair]   = useState(createParticleData.assetPair || 'chai');
-    const [particleCreatorFee,  setParticleCreatorFee]  = useState(createParticleData.creatorFee || 0.25);
-    const [creatorFeeMode,      setCreatorFeeMode]      = useState(createParticleData.creatorFee > 1 ? 'higher' : 'lower');
+    const [particleAssetPair,   setParticleAssetPair]   = useState(tentListingData.assetPair || 'chai');
+    const [particleCreatorFee,  setParticleCreatorFee]  = useState(tentListingData.creatorFee || 0.25);
+    const [creatorFeeMode,      setCreatorFeeMode]      = useState(tentListingData.creatorFee > 1 ? 'higher' : 'lower');
 
     const inputLabelRef = useRef(null);
     const [labelWidth, setLabelWidth] = useState(0);

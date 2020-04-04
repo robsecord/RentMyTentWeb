@@ -15,12 +15,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
-import FormCreateClasification from './FormCreateClassification';
-import FormCreateCommon from './FormCreateCommon';
-import FormCreateFungible from './FormCreateFungible';
+import CreateCommon from './CreateCommon';
 import FormCreateNonFungible from './FormCreateNonFungible';
 import FormCreateConfirm from './FormCreateConfirm';
-import TokenTypeBadge from '../TokenTypeBadge';
 
 // App Images
 import partyPopperImg from '../../../images/party-popper.png';
@@ -48,23 +45,17 @@ const useCustomStyles = makeStyles(theme => ({
 
 const getSteps = () => {
     return [
-        'Select a Classification',
-        'Identify Particle',
-        'Define Physics',
-        'Spawn into Existence',
+        'Describe Your Tent',
+        'Specify Attributes',
+        'Register Token',
     ];
 };
 
-const getStepContent = ({createParticleData, onSubmitForm, step, back, next}) => {
+const getStepContent = ({onSubmitForm, step, back, next}) => {
     switch (step) {
         case 0:
-            return (<FormCreateClasification back={back} next={next} />);
-        case 1:
-            return (<FormCreateCommon back={back} next={next} />);
+            return (<CreateCommon back={back} next={next} />);
         case 2:
-            if (createParticleData.classification === 'plasma') {
-                return (<FormCreateFungible back={back} next={next} />);
-            }
             return (<FormCreateNonFungible back={back} next={next} />);
         case 3:
             return (<FormCreateConfirm back={back} next={onSubmitForm} />);
@@ -73,11 +64,10 @@ const getStepContent = ({createParticleData, onSubmitForm, step, back, next}) =>
     }
 };
 
-function FormCreateWizard({ onSubmitForm }) {
+function CreateWizard({ onSubmitForm }) {
     const customClasses = useCustomStyles();
 
-    const [rootState, rootDispatch] = useContext(RootContext);
-    const { createParticleData } = rootState;
+    const [, rootDispatch] = useContext(RootContext);
 
     const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
@@ -108,13 +98,6 @@ function FormCreateWizard({ onSubmitForm }) {
 
     return (
         <div className={customClasses.root}>
-            {
-                activeStep > 0 && (
-                    <TokenTypeBadge
-                        typeData={createParticleData}
-                    />
-                )
-            }
             <Stepper activeStep={activeStep} orientation="vertical">
                 {steps.map((label, step) => (
                     <Step key={label}>
@@ -123,7 +106,6 @@ function FormCreateWizard({ onSubmitForm }) {
                             {
                                 getStepContent({
                                     step,
-                                    createParticleData,
                                     onSubmitForm: _handleSubmitForm,
                                     back: handleBack,
                                     next: handleNext,
@@ -140,7 +122,7 @@ function FormCreateWizard({ onSubmitForm }) {
                     </Grid>
                     <Box py={3}>
                         <Grid container direction="row" justify="center" alignItems="center">
-                            <Typography>Finished! Your Particle is being Created!</Typography>
+                            <Typography>Finished! Your Tent-Listing is being created!</Typography>
                         </Grid>
                     </Box>
                     <Box py={2}>
@@ -157,4 +139,4 @@ function FormCreateWizard({ onSubmitForm }) {
     );
 }
 
-export default FormCreateWizard;
+export default CreateWizard;

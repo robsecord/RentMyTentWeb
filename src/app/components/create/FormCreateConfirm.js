@@ -30,8 +30,8 @@ const FormCreateConfirm = ({ back, next }) => {
     const classes = useRootStyles();
 
     const [ rootState ] = useContext(RootContext);
-    const { createParticleData } = rootState;
-    const isNonFungible = (createParticleData.classification !== 'plasma');
+    const { tentListingData } = rootState;
+    const isNonFungible = (tentListingData.classification !== 'plasma');
 
     const [ walletState ] = useContext(WalletContext);
     const { networkId } = walletState;
@@ -54,7 +54,7 @@ const FormCreateConfirm = ({ back, next }) => {
         try {
             let tmp;
             let formData = {
-                ...createParticleData,
+                ...tentListingData,
                 isNonFungible
             };
             if (isNonFungible) {

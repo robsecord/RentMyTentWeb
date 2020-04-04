@@ -18,12 +18,12 @@ const tokenMetadata = {
     'animation_url'     : '',
     'youtube_url'       : '',
     'image'             : '',
-    'name'              : '',
-    'symbol'            : '',
-    'decimals'          : 18,
-    'background_color'  : 'FFF',
+    'name'              : GLOBALS.TOKEN_DATA.NAME,
+    'symbol'            : GLOBALS.TOKEN_DATA.SYMBOL,
+    'decimals'          : GLOBALS.TOKEN_DATA.DECIMALS,
+    'background_color'  : GLOBALS.TOKEN_DATA.BG_COLOR,
     'properties'        : {},
-    'attributes'        : [],   // OpenSea
+    'attributes'        : [],   // for OpenSea
 };
 
 
@@ -39,10 +39,8 @@ ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
 
             // Generate Token Metadata
             const metadata          = {...tokenMetadata};
-            metadata.name           = tokenData.name;
-            metadata.symbol         = tokenData.symbol;
             metadata.description    = tokenData.desc;
-            metadata.external_url   = `${GLOBALS.BASE_URL}${GLOBALS.APP_ROOT}/type/{id}`;
+            metadata.external_url   = `${GLOBALS.BASE_URL}${GLOBALS.APP_ROOT}/tent/{id}`;
             metadata.image          = imageFileUrl;
             // metadata.properties = {};
             // metadata.attributes = [];
@@ -53,6 +51,42 @@ ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
             console.log('jsonFileUrl', jsonFileUrl, metadata);
 
             resolve({imageFileUrl, jsonFileUrl});
+        }
+        catch (err) {
+            reject(err);
+        }
+    });
+};
+
+
+
+ContractHelpers.registerTent = ({from, tokenData, onProgress}) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const ethPrice = GLOBALS.REGISTER_TENT;
+
+            // Save Token Metadata
+            const {jsonFileUrl} = await ContractHelpers.saveMetadata({tokenData, onProgress});
+
+            // Create Token on Blockchain
+            onProgress('Creating Blockchain Transaction..');
+            const rentMyTent = RentMyTent.instance();
+            const tx = {from, value: ethPrice};
+            const args = [
+                tokenData.initialPrice,
+                jsonFileUrl,
+            ];
+
+            console.log('tx', tx);
+            console.log('args', args);
+
+            // Submit Transaction and wait for Receipt
+            rentMyTent.sendContractTx('listNewTent', tx, args, (err, transactionHash) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve({tx, args, transactionHash});
+            });
         }
         catch (err) {
             reject(err);
