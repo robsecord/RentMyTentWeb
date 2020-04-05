@@ -15,9 +15,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
-import CreateCommon from './CreateCommon';
-import FormCreateNonFungible from './FormCreateNonFungible';
-import FormCreateConfirm from './FormCreateConfirm';
+import TentDescription from './TentDescription';
+import TentAttributes from './TentAttributes';
+import ConfirmListing from './ConfirmListing';
 
 // App Images
 import partyPopperImg from '../../../images/party-popper.png';
@@ -45,26 +45,35 @@ const useCustomStyles = makeStyles(theme => ({
 
 const getSteps = () => {
     return [
-        'Describe Your Tent',
+        'Pitch Your Tent',
         'Specify Attributes',
-        'Register Token',
+        'Create Listing',
     ];
 };
 
 const getStepContent = ({onSubmitForm, step, back, next}) => {
     switch (step) {
         case 0:
-            return (<CreateCommon back={back} next={next} />);
+            return (<TentDescription back={back} next={next} />);
+        case 1:
+            return (<TentAttributes back={back} next={next} />);
         case 2:
-            return (<FormCreateNonFungible back={back} next={next} />);
-        case 3:
-            return (<FormCreateConfirm back={back} next={onSubmitForm} />);
+            return (<ConfirmListing back={back} next={onSubmitForm} />);
         default:
-            return 'Unknown step';
+            return (
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                        <Grid container direction="row" justify="flex-start" alignItems="center">
+                            <Button type="button" variant="outlined" size="large" onClick={back}>back</Button>
+                            <Box px={5}>Unknown Step!</Box>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            );
     }
 };
 
-function CreateWizard({ onSubmitForm }) {
+function ListingWizard({ onSubmitForm }) {
     const customClasses = useCustomStyles();
 
     const [, rootDispatch] = useContext(RootContext);
@@ -72,11 +81,11 @@ function CreateWizard({ onSubmitForm }) {
     const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
 
-    useEffect(() => {
-        return () => {
-            rootDispatch({type: 'CLEAR_CREATION_DATA'});
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         rootDispatch({type: 'CLEAR_LISTING_DATA'});
+    //     };
+    // }, []);
 
     const handleNext = () => {
         setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -88,7 +97,7 @@ function CreateWizard({ onSubmitForm }) {
 
     const handleReset = () => {
         setActiveStep(0);
-        rootDispatch({type: 'CLEAR_CREATION_DATA'});
+        rootDispatch({type: 'CLEAR_LISTING_DATA'});
     };
 
     const _handleSubmitForm = (formData) => {
@@ -139,4 +148,4 @@ function CreateWizard({ onSubmitForm }) {
     );
 }
 
-export default CreateWizard;
+export default ListingWizard;

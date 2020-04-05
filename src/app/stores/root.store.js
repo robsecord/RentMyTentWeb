@@ -11,6 +11,8 @@ const initialState = {
 
     connectionState: {},
 
+    tentListingData: {},
+
     errors: null
 };
 

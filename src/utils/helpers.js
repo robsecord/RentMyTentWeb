@@ -29,6 +29,10 @@ Helpers.getBlockieOptions = (walletData, opts = {}) => {
     return {...defaultOptions, ...opts};
 };
 
+Helpers.getShortAddress = (address) => {
+    return _.join([..._.slice(address, 0, 6), '...', ..._.slice(address, -4)], '');
+};
+
 Helpers.getNetworkName = (networkId) => {
     switch (_.parseInt(networkId, 10)) {
         case 1:

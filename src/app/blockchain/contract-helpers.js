@@ -18,7 +18,7 @@ const tokenMetadata = {
     'animation_url'     : '',
     'youtube_url'       : '',
     'image'             : '',
-    'name'              : GLOBALS.TOKEN_DATA.NAME,
+    'name'              : '',
     'symbol'            : GLOBALS.TOKEN_DATA.SYMBOL,
     'decimals'          : GLOBALS.TOKEN_DATA.DECIMALS,
     'background_color'  : GLOBALS.TOKEN_DATA.BG_COLOR,
@@ -32,13 +32,22 @@ const ContractHelpers = {};
 ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
     return new Promise(async (resolve, reject) => {
         try {
+
+            console.log('ContractHelpers.saveMetadata');
+            console.log(' - tokenData', tokenData);
+
+
             // Save Image File to IPFS
             onProgress('Saving Image to IPFS..');
-            const imageFileUrl = await IPFS.saveImageFile({fileBuffer: tokenData.iconBuffer});
+            console.log('step 1');
+
+
+            const imageFileUrl = await IPFS.saveImageFile({fileBuffer: tokenData.imageBuffer});
             console.log('imageFileUrl', imageFileUrl);
 
             // Generate Token Metadata
             const metadata          = {...tokenMetadata};
+            metadata.name           = tokenData.name;
             metadata.description    = tokenData.desc;
             metadata.external_url   = `${GLOBALS.BASE_URL}${GLOBALS.APP_ROOT}/tent/{id}`;
             metadata.image          = imageFileUrl;
@@ -63,6 +72,12 @@ ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
 ContractHelpers.registerTent = ({from, tokenData, onProgress}) => {
     return new Promise(async (resolve, reject) => {
         try {
+
+            console.log('ContractHelpers.registerTent');
+            console.log(' - from', from);
+            console.log(' - tokenData', tokenData);
+
+
             const ethPrice = GLOBALS.REGISTER_TENT;
 
             // Save Token Metadata
@@ -73,7 +88,7 @@ ContractHelpers.registerTent = ({from, tokenData, onProgress}) => {
             const rentMyTent = RentMyTent.instance();
             const tx = {from, value: ethPrice};
             const args = [
-                tokenData.initialPrice,
+                '12300000000000000000', // tokenData.initialPrice,
                 jsonFileUrl,
             ];
 

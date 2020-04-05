@@ -26,7 +26,7 @@ const customFeeSettings = {
 
 
 // Create Route
-const FormCreateNonFungible = ({ back, next }) => {
+const TentAttributes = ({ back, next }) => {
     const classes = useRootStyles();
 
     const [ rootState, rootDispatch ] = useContext(RootContext);
@@ -45,7 +45,7 @@ const FormCreateNonFungible = ({ back, next }) => {
     useEffect(() => {
         const formData = _getFormData();
         rootDispatch({
-            type    : 'UPDATE_CREATION_DATA',
+            type    : 'UPDATE_LISTING_DATA',
             payload : formData
         });
     }, [
@@ -187,4 +187,4 @@ const FormCreateNonFungible = ({ back, next }) => {
     )
 };
 
-export default FormCreateNonFungible;
+export default TentAttributes;

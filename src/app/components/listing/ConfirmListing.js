@@ -1,9 +1,8 @@
 // Frameworks
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import * as _ from 'lodash';
 
 // App Components
-import { Helpers } from '../../../utils/helpers';
 import { GLOBALS } from '../../../utils/globals';
 
 // Data Context for State
@@ -14,10 +13,6 @@ import { WalletContext } from '../../stores/wallet.store';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
 
 // Rimble UI
 import NetworkIndicator from '@rimble/network-indicator';
@@ -26,53 +21,21 @@ import NetworkIndicator from '@rimble/network-indicator';
 import useRootStyles from '../../layout/styles/root.styles';
 
 // Create Route
-const FormCreateConfirm = ({ back, next }) => {
+const ConfirmListing = ({ back, next }) => {
     const classes = useRootStyles();
 
     const [ rootState ] = useContext(RootContext);
     const { tentListingData } = rootState;
-    const isNonFungible = (tentListingData.classification !== 'plasma');
 
     const [ walletState ] = useContext(WalletContext);
     const { networkId } = walletState;
-
-    const [paymentType, setPaymentType] = useState('eth');
-
-    const paymentInputLabelRef = useRef(null);
-    const [paymentInputLabelWidth, setPaymentInputLabelWidth] = useState(0);
-    useEffect(() => {
-        setPaymentInputLabelWidth(paymentInputLabelRef.current.offsetWidth);
-    }, []);
-
-    const _updatePaymentType = evt => {
-        setPaymentType(evt.target.value);
-    };
 
     const _handleSubmit = async evt => {
         evt.preventDefault();
 
         try {
-            let tmp;
-            let formData = {
-                ...tentListingData,
-                isNonFungible
-            };
-            if (isNonFungible) {
-                tmp = parseFloat(formData.creatorFee);
-                formData.creatorFee = `${_.round(tmp * GLOBALS.DEPOSIT_FEE_MODIFIER / 100)}`;
-            } else {
-                tmp = parseFloat(formData.ethPerToken) * GLOBALS.ETH_UNIT;
-                formData.ethPerToken = tmp.toLocaleString('fullwide', {useGrouping: false});
-
-                tmp = _.parseInt(formData.amountToMint, 10) * GLOBALS.ETH_UNIT;
-                formData.amountToMint = tmp.toLocaleString('fullwide', {useGrouping: false});
-            }
-
-            tmp = _.parseInt(formData.supply, 10) * GLOBALS.ETH_UNIT;
-            formData.supply = tmp.toLocaleString('fullwide', {useGrouping: false});
-
             // Submit Form
-            next(formData);
+            next(tentListingData);
         }
         catch (err) {
             console.error(err);
@@ -101,21 +64,7 @@ const FormCreateConfirm = ({ back, next }) => {
                             </Button>
                         </Grid>
                         <Grid item xs={6}>
-                            <FormControl variant="outlined" className={classes.formControl}>
-                                <InputLabel ref={paymentInputLabelRef} id="particlePaymentLabel">
-                                    Payment
-                                </InputLabel>
-                                <Select
-                                    id="particlePayment"
-                                    labelId="particlePaymentLabel"
-                                    labelWidth={paymentInputLabelWidth}
-                                    value={paymentType}
-                                    onChange={_updatePaymentType}
-                                >
-                                    <MenuItem value={'eth'}>ETH - {Helpers.getFriendlyPrice('eth', isNonFungible)}</MenuItem>
-                                    <MenuItem value={'ion'} disabled>ION - coming soon</MenuItem>
-                                </Select>
-                            </FormControl>
+
                         </Grid>
                     </Grid>
                 </Grid>
@@ -141,7 +90,7 @@ const FormCreateConfirm = ({ back, next }) => {
                                 size="large"
                                 onClick={_handleSubmit}
                             >
-                                Create Particle
+                                List My Tent
                             </Button>
                         </Grid>
                     </Grid>
@@ -151,4 +100,4 @@ const FormCreateConfirm = ({ back, next }) => {
     )
 };
 
-export default FormCreateConfirm;
+export default ConfirmListing;

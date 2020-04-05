@@ -64,7 +64,7 @@ class IWalletBase {
         payload.networkId = await this.web3.eth.getChainId(); // this.provider.networkVersion;
         payload.type = this.type;
         payload.address = address;
-        payload.name = _.join([..._.slice(address, 0, 6), '...', ..._.slice(address, -4)], '');
+        payload.name = Helpers.getShortAddress(address);
         payload.balance = await this.web3.eth.getBalance(address);
 
         this.dispatchState({type: 'CONNECTED_ACCOUNT', payload});

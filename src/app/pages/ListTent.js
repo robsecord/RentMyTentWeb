@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 
 // App Components
 import SEO from '../../components/seo';
-import CreateWizard from '../components/create/CreateWizard';
+import ListingWizard from '../components/listing/ListingWizard';
 import LoadingModal from '../components/LoadingModal';
 import Transactions from '../blockchain/transactions';
 import { ContractHelpers } from '../blockchain/contract-helpers';
@@ -106,7 +106,7 @@ const ListTent = ({ location }) => {
 
         return (
             <form autoComplete={'off'}>
-                <CreateWizard
+                <ListingWizard
                     onSubmitForm={handleSubmit}
                 />
             </form>
@@ -115,7 +115,7 @@ const ListTent = ({ location }) => {
 
     return (
         <>
-            <SEO title={'List a Tent'} />
+            <SEO title={'List My Tent'} />
             <AppTabs location={location} />
 
             <Typography
@@ -123,7 +123,7 @@ const ListTent = ({ location }) => {
                 component={'h3'}
                 className={classes.pageHeader}
             >
-                List a Tent!
+                List My Tent!
             </Typography>
 
             {_getContent()}
