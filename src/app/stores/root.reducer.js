@@ -24,6 +24,7 @@ const RootReducer = (state, action) => {
                 isNetworkConnected : action.payload.isNetworkConnected,
                 networkErrors      : action.payload.networkErrors,
             };
+
         case 'UPDATE_LISTING_DATA':
             return {
                 ...state,
@@ -36,6 +37,26 @@ const RootReducer = (state, action) => {
             return {
                 ...state,
                 tentListingData : {},
+            };
+
+        case 'UPDATE_REGISTRATION_DATA':
+            return {
+                ...state,
+                registrationData : {
+                    ...state.registrationData,
+                    ...action.payload
+                },
+            };
+        case 'CLEAR_REGISTRATION_DATA':
+            return {
+                ...state,
+                registrationData : {},
+            };
+
+        case 'UPDATE_MEMBER_STATE':
+            return {
+                ...state,
+                ...action.payload,
             };
         default:
             return state;

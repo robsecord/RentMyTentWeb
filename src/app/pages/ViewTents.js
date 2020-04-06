@@ -34,7 +34,7 @@ const ViewTents = ({ location }) => {
                     severity="warning"
                     icon={<UseAnimations animationKey="alertTriangle" size={24} />}
                 >
-                    You must connect your account in order to Mint Particles!
+                    You must connect your account in order to Rent Tents!
                 </Alert>
             );
         }

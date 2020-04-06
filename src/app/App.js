@@ -13,6 +13,7 @@ import TransactionStore from './stores/transaction.store';
 import AppLayout from './layout/AppLayout';
 import ViewTents from './pages/ViewTents';
 import ListTent from './pages/ListTent';
+import MemberProfile from './pages/MemberProfile';
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                         <Router>
                             <ViewTents path={GLOBALS.APP_ROOT} />
                             <ListTent path={`${GLOBALS.APP_ROOT}/list`} />
+                            <MemberProfile path={`${GLOBALS.APP_ROOT}/profile`} />
                         </Router>
                     </AppLayout>
                 </TransactionStore>

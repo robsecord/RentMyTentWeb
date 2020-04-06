@@ -1,35 +1,54 @@
 
 const TransactionReducer = (state, action) => {
     switch (action.type) {
+        case 'BEGIN_TX':
+            return {
+                ...state,
+                submittedTransaction: {},
+                transactionHash: '',
+                streamState: 'started',
+                streamError: '',
+                streamTransitions: [],
+            };
+        case 'SUBMIT_TX':
+            return {
+                ...state,
+                submittedTransaction: action.payload,
+                streamState: 'submitted',
+            };
         case 'BEGIN_STREAMING':
             return {
                 ...state,
+                submittedTransaction: {},
                 transactionHash: action.payload.transactionHash,
                 streamState: 'streaming',
-                streamError: '',
-                streamTransitions: [],
             };
         case 'STREAM_ERROR':
             return {
                 ...state,
-                streamError: action.payload.streamError
+                streamState: 'completed',
+                streamError: action.payload.streamError,
             };
         case 'STREAM_TRANSITION':
             return {
                 ...state,
-                streamTransitions: action.payload.streamTransitions
+                streamTransitions: action.payload.streamTransitions,
             };
         case 'STREAM_COMPLETE':
             return {
                 ...state,
                 transactionHash: '',
-                streamState: 'completed'
+                streamState: 'completed',
+                streamTransitions: [],
             };
         case 'CLEAR_STREAM':
             return {
                 ...state,
+                submittedTransaction: {},
                 transactionHash: '',
-                streamState: ''
+                streamState: '',
+                streamError: '',
+                streamTransitions: [],
             };
 
         case 'BEGIN_SEARCH':

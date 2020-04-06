@@ -9,8 +9,11 @@ const initialState = {
     isNetworkConnected: false,
     networkErrors: [],
 
-    connectionState: {},
+    isMember: false,
+    memberName: '',
 
+    connectionState: {},
+    registrationData: {},
     tentListingData: {},
 
     errors: null

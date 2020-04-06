@@ -3,6 +3,8 @@ import TransactionReducer from './transaction.reducer'
 
 
 const initialState = {
+    submittedTransaction: {},
+
     transactionHash: '',
     streamState: '',
     streamError: '',

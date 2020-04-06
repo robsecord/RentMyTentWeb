@@ -85,6 +85,10 @@ const useCustomStyles = makeStyles(theme => ({
 const TX_COMPLETE_DELAY = 10 * 1000;
 const STATE_MSG = {
     'UNKNOWN'   : 'Transaction pooled and waiting to be included in a block...',
+    'TX_INIT'   : 'Transaction created, monitoring has begun in the background...',
+    'TX_PROMPT' : 'Creating Blockchain Transaction...',
+    'IPFS_IMG'  : 'Saving Image to IPFS...',
+    'IPFS_META' : 'Saving Metadata to IPFS...',
     'PENDING'   : 'Transaction pending block selection by miners...',
     'IN_BLOCK'  : 'Transaction has been included in a block for execution...',
     'REPLACED'  : 'Transaction replaced and has been re-pooled...',
@@ -92,6 +96,7 @@ const STATE_MSG = {
     'COMPLETED' : 'Transaction Completed Successfully!',
 };
 
+let _clearStreamTimeout = 0;
 
 // Create Route
 const TxStreamView = () => {
@@ -113,8 +118,9 @@ const TxStreamView = () => {
     const [ includedInBlock, setIncludedInBlock ] = useState(0);
 
     const hasError = (!_.isEmpty(streamError));
+    const isCleared = (_.isEmpty(streamState));
     const isCompleted = (streamState === 'completed');
-    const isProcessing = !isCompleted && !hasError && !_.isEmpty(transactionHash);
+    const isProcessing = !isCleared && !isCompleted && !hasError;// && !_.isEmpty(transactionHash);
     const networkName = Helpers.getNetworkName(networkId);
 
     const transitionDuration = {
@@ -123,16 +129,19 @@ const TxStreamView = () => {
     };
 
     useEffect(() => {
-        if (streamState === 'completed') {
-            if (!isOpenModal) {
+        if (isCompleted) {
+            if (!isCleared && !isOpenModal && !hasError) {
                 toast('🦄 Transaction Complete!');
             }
 
-            setTimeout(() => {
+            clearTimeout(_clearStreamTimeout);
+            _clearStreamTimeout = setTimeout(() => {
+                if (isCleared) { return; }
+                _clearAll();
                 txDispatch({type: 'CLEAR_STREAM'});
             }, TX_COMPLETE_DELAY);
         }
-    }, [streamState, isOpenModal]);
+    }, [isCompleted, hasError, isCleared, isOpenModal]);
 
     useEffect(() => {
         const latest = _.first(streamTransitions);
@@ -146,7 +155,9 @@ const TxStreamView = () => {
             // console.log('currentState', currentState);
             // console.log('currentTransition', currentTransition);
 
-            if (currentState === 'PENDING') {
+            if (currentState === 'CREATE') {
+                setCurrentStreamState(STATE_MSG[currentTransition]);
+            } else if (currentState === 'PENDING') {
                 setCurrentStreamState(STATE_MSG.PENDING);
             } else if (currentState === 'REPLACED') {
                 setCurrentStreamState(STATE_MSG.REPLACED);
@@ -178,8 +189,15 @@ const TxStreamView = () => {
         }
     }, [streamTransitions, setCurrentStreamState, setConfirmationCount, setIncludedInBlock]);
 
+    const _clearAll = () => {
+        setIncludedInBlock(0);
+        setConfirmationCount(-1);
+        setCurrentStreamState('');
+        setOpenModal(false);
+    };
 
     const onFabClick = () => {
+        if (isCompleted) { return; }
         setOpenModal(true);
     };
 
@@ -249,7 +267,7 @@ const TxStreamView = () => {
             <Modal
                 aria-labelledby="processing-modal"
                 aria-describedby="processing-modal-description"
-                open={isOpenModal && !isCompleted}
+                open={isOpenModal && !isCleared}
                 onClose={handleModalClosed}
             >
                 <div className={clsx(classes.simpleModal, customClasses.processingModal)}>
@@ -307,30 +325,6 @@ const TxStreamView = () => {
             </Modal>
         </>
     );
-
-    // return (
-    //     <Box p={4}>
-    //         <Heading as={"h2"} mt={30}>TX Stream:</Heading>
-    //
-    //         <Flex mx={-3} flexWrap={"wrap"}>
-    //             <Box width={[1]}>
-    //                 <p>Transaction Hash: {transactionHash}</p>
-    //                 <p>State: {streamState}</p>
-    //                 <p>Error: {streamError}</p>
-    //                 {
-    //                     _.map(streamTransitions, (transition) => (
-    //                         <div className="transition" key={transition.key}>
-    //                             <strong>Transition:</strong> {transition.transition} <br/>
-    //                             <strong>Previous State:</strong> {transition.from} <br/>
-    //                             <strong>Current State:</strong> {transition.to} <br/>
-    //                             <pre key={transition.key}>  { JSON.stringify(transition.data, null, 1) } </pre>
-    //                         </div>
-    //                     ))
-    //                 }
-    //             </Box>
-    //         </Flex>
-    //     </Box>
-    // )
 };
 
 export default TxStreamView;

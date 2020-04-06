@@ -16,6 +16,9 @@ import './styles/overrides.css';
 import theme from '../../layout/styles/root.theme';
 import useRootStyles from './styles/root.styles';
 
+// Toast Styles
+import 'react-toastify/dist/ReactToastify.css';
+
 // App Components
 import Wallet from '../wallets';
 import { Helpers } from '../../utils/helpers';
@@ -31,7 +34,7 @@ import RentMyTentData from '../blockchain/contracts/RentMyTent';
 
 // Transactions Monitor
 import Transactions from '../blockchain/transactions';
-import TxStreamView from '../components/TxStreamView';
+import TransactionManager from '../blockchain/TransactionManager';
 
 // Data Context for State
 import { RootContext } from '../stores/root.store';
@@ -42,11 +45,11 @@ import { TransactionContext } from '../stores/transaction.store';
 function AppLayout({ children }) {
     const classes = useRootStyles();
     const wallet = Wallet.instance();
-    const [, rootDispatch] = useContext(RootContext);
-    const [, txDispatch] = useContext(TransactionContext);
-    const [walletState, walletDispatch] = useContext(WalletContext);
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [, rootDispatch ] = useContext(RootContext);
+    const [, txDispatch ] = useContext(TransactionContext);
+    const [ walletState, walletDispatch ] = useContext(WalletContext);
     const { allReady: isWalletReady, networkId } = walletState;
+    const [ mobileOpen, setMobileOpen ] = useState(false);
 
     const data = useStaticQuery(graphql`
         query SiteDataQuery {
@@ -101,7 +104,6 @@ function AppLayout({ children }) {
         }
     }, [networkId, rootDispatch]);
 
-
     const _handleDrawerToggle = (evt) => {
         evt.preventDefault();
         setMobileOpen(!mobileOpen);
@@ -148,7 +150,7 @@ function AppLayout({ children }) {
                     </div>
 
                     <ConnectWallet />
-                    <TxStreamView />
+                    <TransactionManager />
                 </main>
             </div>
             <ToastContainer

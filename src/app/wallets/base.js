@@ -2,6 +2,7 @@
 import * as _ from 'lodash';
 
 // App Components
+import { ContractHelpers } from '../blockchain/contract-helpers';
 import { Helpers } from '../../utils/helpers';
 
 class IWalletBase {
@@ -68,7 +69,6 @@ class IWalletBase {
         payload.balance = await this.web3.eth.getBalance(address);
 
         this.dispatchState({type: 'CONNECTED_ACCOUNT', payload});
-
 
         setTimeout(() => {
             this.dispatchState({type: 'ALL_READY', payload: true});

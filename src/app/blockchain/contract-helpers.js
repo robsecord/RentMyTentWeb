@@ -7,7 +7,10 @@ import { GLOBALS } from '../../utils/globals';
 import IPFS from '../../utils/ipfs';
 
 // Contract Data
-import { RentMyTent } from '../blockchain/contracts';
+import {
+    getContractByName,
+    RentMyTent
+} from '../blockchain/contracts';
 
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema
@@ -26,22 +29,49 @@ const tokenMetadata = {
     'attributes'        : [],   // for OpenSea
 };
 
+const _contractErrorHandler = (methodName, txDispatch) => (err, txProof) => {
+    const msg = _.get(err, 'message', err.toString());
+    if (_.isEmpty(txProof) && /denied transaction signature/i.test(msg)) {
+        txDispatch({type: 'CLEAR_STREAM'});
+        return;
+    }
+
+    const errorMsg = [`[${methodName}]`];
+    if (/gateway timeout/i.test(msg)) {
+        errorMsg.push('Failed to save Image and/or Metadata to IPFS!');
+    } else {
+        errorMsg.push('An unexpected error has occurred!');
+        console.error(err);
+    }
+
+    console.info(`[${methodName}] ${msg}`);
+    txDispatch({
+        type: 'STREAM_ERROR',
+        payload: {streamError: errorMsg.join(' ')}
+    });
+};
+
 
 const ContractHelpers = {};
 
-ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
+ContractHelpers.readContractValue = async (contractName, method, ...args) => {
+    const contract = getContractByName(contractName);
+    if (!contract) {
+        throw new Error(`[ContractHelpers.readContractValue] Invalid Contract Name: ${contractName}`);
+    }
+    return await contract.instance().callContractFn(method, ...args);
+};
+
+ContractHelpers.saveMetadata = ({ tokenData, txDispatch }) => {
     return new Promise(async (resolve, reject) => {
         try {
-
-            console.log('ContractHelpers.saveMetadata');
-            console.log(' - tokenData', tokenData);
-
-
             // Save Image File to IPFS
-            onProgress('Saving Image to IPFS..');
-            console.log('step 1');
-
-
+            // onProgress('Saving Image to IPFS..');
+            txDispatch({
+                type: 'STREAM_TRANSITION', payload: {
+                    streamTransitions: [{to: 'CREATE', transition: 'IPFS_IMG'}]
+                }
+            });
             const imageFileUrl = await IPFS.saveImageFile({fileBuffer: tokenData.imageBuffer});
             console.log('imageFileUrl', imageFileUrl);
 
@@ -55,7 +85,12 @@ ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
             // metadata.attributes = [];
 
             // Save Metadata to IPFS
-            onProgress('Saving Metadata to IPFS..');
+            // onProgress('Saving Metadata to IPFS..');
+            txDispatch({
+                type: 'STREAM_TRANSITION', payload: {
+                    streamTransitions: [{to: 'CREATE', transition: 'IPFS_META'}]
+                }
+            });
             const jsonFileUrl = await IPFS.saveJsonFile({jsonObj: metadata});
             console.log('jsonFileUrl', jsonFileUrl, metadata);
 
@@ -67,47 +102,94 @@ ContractHelpers.saveMetadata = ({ tokenData, onProgress }) => {
     });
 };
 
+ContractHelpers.registerTent = ({from, tokenData, txDispatch}) => {
+    return new Promise(async (resolve) => {
+        const rentMyTent = RentMyTent.instance();
+        const handleError = _contractErrorHandler('registerTent', txDispatch);
+        let transactionHash = '';
 
-
-ContractHelpers.registerTent = ({from, tokenData, onProgress}) => {
-    return new Promise(async (resolve, reject) => {
         try {
-
+            const ethPrice = GLOBALS.FEES.REGISTER_TENT;
+            txDispatch({type: 'BEGIN_TX'});
             console.log('ContractHelpers.registerTent');
-            console.log(' - from', from);
-            console.log(' - tokenData', tokenData);
-
-
-            const ethPrice = GLOBALS.REGISTER_TENT;
 
             // Save Token Metadata
-            const {jsonFileUrl} = await ContractHelpers.saveMetadata({tokenData, onProgress});
+            const {jsonFileUrl} = await ContractHelpers.saveMetadata({tokenData, txDispatch});
 
-            // Create Token on Blockchain
-            onProgress('Creating Blockchain Transaction..');
-            const rentMyTent = RentMyTent.instance();
+            // Update Transition State
+            txDispatch({
+                type: 'STREAM_TRANSITION', payload: {
+                    streamTransitions: [{to: 'CREATE', transition: 'TX_PROMPT'}]
+                }
+            });
+
+            // Transaction Args
             const tx = {from, value: ethPrice};
             const args = [
                 '12300000000000000000', // tokenData.initialPrice,
                 jsonFileUrl,
             ];
-
-            console.log('tx', tx);
-            console.log('args', args);
+            console.log(' - tx', tx);
+            console.log(' - args', args);
 
             // Submit Transaction and wait for Receipt
-            rentMyTent.sendContractTx('listNewTent', tx, args, (err, transactionHash) => {
+            rentMyTent.sendContractTx('listNewTent', tx, args, (err, txHash) => {
+                transactionHash = txHash;
                 if (err) {
-                    return reject(err);
+                    handleError(err, transactionHash);
+                    return resolve({transactionHash});
                 }
+                txDispatch({type: 'SUBMIT_TX', payload: {transactionHash}});
                 resolve({tx, args, transactionHash});
             });
         }
         catch (err) {
-            reject(err);
+            handleError(err, transactionHash);
+            resolve({transactionHash});
         }
     });
 };
 
+ContractHelpers.registerMember = ({from, memberName, memberAddress, txDispatch}) => {
+    return new Promise(async (resolve) => {
+        const rentMyTent = RentMyTent.instance();
+        const handleError = _contractErrorHandler('registerMember', txDispatch);
+        let transactionHash = '';
+
+        try {
+            const ethPrice = GLOBALS.FEES.REGISTER_MEMBER;
+            txDispatch({type: 'BEGIN_TX'});
+            console.log('ContractHelpers.registerMember');
+
+            // Update Transition State
+            txDispatch({
+                type: 'STREAM_TRANSITION', payload: {
+                    streamTransitions: [{to: 'CREATE', transition: 'TX_PROMPT'}]
+                }
+            });
+
+            // Transaction Args
+            const tx = {from, value: ethPrice};
+            const args = [memberAddress, memberName];
+            console.log(' - tx', tx);
+            console.log(' - args', args);
+
+            // Submit Transaction and wait for Receipt
+            rentMyTent.sendContractTx('registerMember', tx, args, (err, txHash) => {
+                transactionHash = txHash;
+                if (err) {
+                    handleError(err, transactionHash);
+                    return resolve({transactionHash});
+                }
+                txDispatch({type: 'SUBMIT_TX', payload: {transactionHash}});
+                resolve({tx, args, transactionHash});
+            });
+        }
+        catch (err) {
+            handleError(err, transactionHash);
+            resolve({transactionHash});
+        }
+    });
+};
 
 export { ContractHelpers, tokenMetadata };
