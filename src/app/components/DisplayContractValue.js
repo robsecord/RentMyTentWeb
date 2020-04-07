@@ -44,6 +44,7 @@ const DisplayContractValue = ({
             (async () => {
                 try {
                     const raw = await ContractHelpers.readContractValue(contractName, method, ...methodArgs);
+                    console.log(contractName, method, raw);
                     const formatted = _getFormattedValue(raw);
                     if (isMounted) {
                         setDisplayValue(formatted);

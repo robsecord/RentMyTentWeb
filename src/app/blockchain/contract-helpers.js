@@ -109,7 +109,6 @@ ContractHelpers.registerTent = ({from, tokenData, txDispatch}) => {
         let transactionHash = '';
 
         try {
-            const ethPrice = GLOBALS.FEES.REGISTER_TENT;
             txDispatch({type: 'BEGIN_TX'});
             console.log('ContractHelpers.registerTent');
 
@@ -124,7 +123,7 @@ ContractHelpers.registerTent = ({from, tokenData, txDispatch}) => {
             });
 
             // Transaction Args
-            const tx = {from, value: ethPrice};
+            const tx = {from};
             const args = [
                 '12300000000000000000', // tokenData.initialPrice,
                 jsonFileUrl,

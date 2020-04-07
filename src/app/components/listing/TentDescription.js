@@ -63,7 +63,7 @@ const TentDescription = ({ next }) => {
     const [tentName,         setTentName]         = useState(tentListingData.name || '');
     const [tentDesc,         setTentDesc]         = useState(tentListingData.desc || '');
     const [tentCreator,      setTentCreator]      = useState(tentListingData.creator || '');
-    const [tentImage,        setTentImage]        = useState(tentListingData.image || 'Upload Image *');
+    const [tentImage,        setTentImage]        = useState(tentListingData.image || 'Upload Image of Tent *');
     const [tentImageBuffer,  setTentImageBuffer]  = useState(tentListingData.imageBuffer || null);
     const [tentImageBase64,  setTentImageBase64]  = useState(tentListingData.imageBase64 || null);
     const [formValidated,    setFormValidated]    = useState(false);
@@ -250,14 +250,14 @@ const TentDescription = ({ next }) => {
                                                 <input
                                                     id="tentTypeImage"
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept="image/png,image/jpg,image/gif"
                                                     className={customClasses.fileInput}
                                                     onChange={_updateTentImage}
                                                     required
                                                 />
                                                 <IconButton
                                                     color="secondary"
-                                                    aria-label="upload image"
+                                                    aria-label="upload image of tent"
                                                     component="span"
                                                 >
                                                     <PhotoCamera />

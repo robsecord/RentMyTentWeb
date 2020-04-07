@@ -46,7 +46,7 @@ const useCustomStyles = makeStyles(theme => ({
 const getSteps = () => {
     return [
         'Pitch Your Tent',
-        'Specify Attributes',
+        'Peg the Details',
         'Create Listing',
     ];
 };

@@ -5,12 +5,13 @@ import * as _ from 'lodash';
 
 // Material UI
 import Alert from '@material-ui/lab/Alert';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
 import SEO from '../../components/seo';
 import { AppTabs } from '../components/AppTabs';
-import DisplayContractValue from '../components/DisplayContractValue';
 import RegisterMember from '../components/registration/RegisterMember';
 
 // Data Context for State
@@ -39,12 +40,19 @@ const MemberProfile = ({ location }) => {
 
     const _getMemberSection = () => {
         return (
-            <Typography variant={'body1'} component={'p'}>
-                [Member-only Section]<br/>
-                Member: {memberName}<br/>
-                List Status of Tents in Custody<br/>
-                List Profits made from Tents
-            </Typography>
+            <Paper square elevation={2}>
+                <Box p={3}>
+                    <Typography variant={'body1'} component={'p'}>
+                        Hello {memberName}!
+                    </Typography>
+
+                    <p>TODO:</p>
+                    <ul>
+                        <li>List Status of Tents in Custody</li>
+                        <li>List Profits made from Tents</li>
+                    </ul>
+                </Box>
+            </Paper>
         );
     };
 
@@ -61,34 +69,14 @@ const MemberProfile = ({ location }) => {
             );
         }
 
-        return (
-            <>
-                <Typography variant={'body1'} component={'p'}>
-                    Address: {connectedAddress}
-                </Typography>
-
-                <Typography variant={'body1'} component={'div'}>
-                    {
-                        !_.isEmpty(connectedAddress) && (
-                            <>
-                                isMember:&nbsp; {isMember.toString()}
-                            </>
-                        )
-                    }
-                </Typography>
-
-                {
-                    isMember
-                        ? _getMemberSection()
-                        : _getNonMemberSection()
-                }
-            </>
-        );
+        return isMember
+            ? _getMemberSection()
+            : _getNonMemberSection();
     };
 
     return (
         <>
-            <SEO title={'Membership'} />
+            <SEO title={'Profile'} />
             <AppTabs location={location} />
 
             <Typography
@@ -96,7 +84,7 @@ const MemberProfile = ({ location }) => {
                 component={'h3'}
                 className={classes.pageHeader}
             >
-                Membership
+                Your Profile
             </Typography>
 
             {_getContent()}

@@ -4,6 +4,9 @@ import * as _ from 'lodash';
 
 // App Components
 import { ContractHelpers } from '../../blockchain/contract-helpers';
+import EthSymbol from '../EthSymbol';
+import DisplayContractValue from '../DisplayContractValue';
+import { Helpers } from '../../../utils/helpers';
 
 // Data Context for State
 import { RootContext } from '../../stores/root.store';
@@ -17,6 +20,7 @@ import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
 import useRootStyles from '../../layout/styles/root.styles';
@@ -138,6 +142,11 @@ const RegisterMember = ({ elevation }) => {
 
     return (
         <Paper square elevation={elevation} className={customClasses.resetContainer}>
+            <Box pb={2}>
+                <Typography variant={'h5'}>
+                    Register!
+                </Typography>
+            </Box>
             <Box py={3}>
                 <Grid container spacing={3} className={classes.gridRow}>
                     <Grid item xs={6}>
@@ -155,7 +164,7 @@ const RegisterMember = ({ elevation }) => {
                     <Grid item xs={6}>
                         <TextField
                             id="memberAddress"
-                            label="Address"
+                            label="Ethereum Address"
                             variant="outlined"
                             onChange={_updateMemberAddress}
                             value={memberAddress}
@@ -169,10 +178,22 @@ const RegisterMember = ({ elevation }) => {
 
             <Divider />
 
-            <Box py={2}>
+            <Box pt={2}>
                 <Grid container spacing={3} className={classes.gridRow}>
                     <Grid item xs={12} sm={6}>
-                        &nbsp;
+                        <Box py={2}>
+                            <Typography component={'span'} variant={'body1'}>
+                                Membership Fee: &nbsp;
+                            </Typography>
+                            <EthSymbol />
+                            <DisplayContractValue
+                                contractName="RentMyTent"
+                                method="getMembershipFee"
+                                methodArgs={[]}
+                                formatValue={Helpers.toEther}
+                                defaultValue={''}
+                            />
+                        </Box>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Grid

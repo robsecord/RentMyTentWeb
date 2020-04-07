@@ -273,17 +273,16 @@ const TxStreamView = () => {
                 <div className={clsx(classes.simpleModal, customClasses.processingModal)}>
                     <Flex flexWrap={"wrap"}>
                         <Box width={1/12}>
-
                             <UseAnimations
-                                strokeColor="#4e3fce"
-                                fillColor="#EEE"
+                                strokeColor="#fccf0e"
+                                fillColor="#ed7a34"
                                 animationKey="loading2"
                                 size={24}
-                                style={{marginTop: 6}}
+                                style={{marginTop: 8}}
                             />
                         </Box>
                         <Box width={11/12} pl={10}>
-                            <Heading as={"h2"} mb={10}>Processing Transaction..</Heading>
+                            <Heading as={"h2"} mt={1} mb={10}>Processing Transaction..</Heading>
 
                             <LinearProgress width={1} />
 
