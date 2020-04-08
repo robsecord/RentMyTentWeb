@@ -46,7 +46,7 @@ const useCustomStyles = makeStyles(theme => ({
 const getSteps = () => {
     return [
         'Pitch Your Tent',
-        'Peg the Details',
+        'Peg the Price',
         'Create Listing',
     ];
 };
@@ -72,6 +72,7 @@ const getStepContent = ({onSubmitForm, step, back, next}) => {
             );
     }
 };
+
 
 function ListingWizard({ onSubmitForm }) {
     const customClasses = useCustomStyles();

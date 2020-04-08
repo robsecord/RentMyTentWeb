@@ -1,9 +1,13 @@
 // Frameworks
+import fetch from 'node-fetch';
 import * as _ from 'lodash';
 
 // App Components
 import Wallet from '../app/wallets';
 import RentMyTentData from '../app/blockchain/contracts/RentMyTent';
+
+// Common
+import { GLOBALS } from './globals';
 
 export const Helpers = {};
 
@@ -46,10 +50,51 @@ Helpers.getNetworkName = (networkId) => {
     }
 };
 
-Helpers.toEther = (str) => {
+Helpers.getSampleName = async () => {
+    const response = await fetch('https://frightanic.com/goodies_content/docker-names.php');
+    return _.startCase(await response.text());
+};
+
+Helpers.getEtherPrice = async () => {
+    const response = await fetch(GLOBALS.ETH_PRICE.API);
+    const json = await response.json();
+    return _.get(_.first(json), 'current_price', 0);
+};
+
+Helpers.getUsdToEth = async (amountUSD) => {
+    let ethPrice = _.get(Helpers, '__USD2ETH_PRICE', 0);
+    const lastLookupTime = _.get(Helpers, '__USD2ETH_CACHE', 0);
+    if (ethPrice === 0 || GLOBALS.ETH_PRICE.CACHE_TIME > Helpers.now() - lastLookupTime) {
+        ethPrice = await Helpers.getEtherPrice();
+    }
+    return _.round(amountUSD * (1 / ethPrice), GLOBALS.ETH_PRICE.PRECISION);
+};
+
+// Helpers.toEther = (str) => {
+//     const web3 = Wallet.instance().getWeb3();
+//     if (!web3) { return str; }
+//     return web3.utils.fromWei(str, 'ether');
+// };
+
+
+Helpers.toEther = (value) => {
+    if (!_.isString(value)) {
+        value = value.toLocaleString('fullwide', {useGrouping: false});
+    }
     const web3 = Wallet.instance().getWeb3();
-    if (!web3) { return str; }
-    return web3.utils.fromWei(str, 'ether');
+    if (!web3) { return value; }
+    return web3.utils.fromWei(value, 'ether');
+};
+
+Helpers.toEtherWithLocale = (value, precision = 0) => {
+    if (_.indexOf(value, ',') > -1) { return value; }
+    return parseFloat(Helpers.toEther(value)).toLocaleString(void(0), {minimumFractionDigits: precision, maximumFractionDigits: precision});
+};
+Helpers.toEtherWithLocalePrecise = (precision) => (value) => Helpers.toEtherWithLocale(value, precision);
+
+
+Helpers.toWei = (value) => {
+    return `${(parseFloat(value) * GLOBALS.ETH_UNIT)}`;
 };
 
 Helpers.toAscii = (str) => {

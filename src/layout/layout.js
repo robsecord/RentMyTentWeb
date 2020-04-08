@@ -12,7 +12,7 @@ import theme from './styles/root.theme';
 import Box from '@material-ui/core/Box';
 
 // Layout Components
-import Header from '../components/header';
+import Header from '../common/header';
 
 // Common
 import { GLOBALS } from '../utils/globals';

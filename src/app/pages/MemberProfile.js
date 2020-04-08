@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
-import SEO from '../../components/seo';
+import SEO from '../../common/seo';
 import { AppTabs } from '../components/AppTabs';
 import RegisterMember from '../components/registration/RegisterMember';
 

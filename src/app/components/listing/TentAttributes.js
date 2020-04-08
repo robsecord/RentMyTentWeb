@@ -1,5 +1,9 @@
 // Frameworks
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+
+// App Components
+import { Helpers } from '../../../utils/helpers';
+import { useDebounce } from '../../../utils/use-debounce';
 
 // Data Context for State
 import { RootContext } from '../../stores/root.store';
@@ -9,74 +13,57 @@ import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
 import Slider from '@material-ui/core/Slider';
 
 // Custom Styles
 import useRootStyles from '../../layout/styles/root.styles';
 
 const customFeeSettings = {
-    'higher': {min: 1, max: 10, step: 0.1},
-    'lower': {min: 0, max: 1, step: 0.01},
+    'higher': {min: 100, max: 1000, step: 10},
+    'lower': {min: 10, max: 100, step: 1},
 };
 
 
-// Create Route
 const TentAttributes = ({ back, next }) => {
     const classes = useRootStyles();
 
     const [ rootState, rootDispatch ] = useContext(RootContext);
     const { tentListingData } = rootState;
 
-    const [particleAssetPair,   setParticleAssetPair]   = useState(tentListingData.assetPair || 'chai');
-    const [particleCreatorFee,  setParticleCreatorFee]  = useState(tentListingData.creatorFee || 0.25);
-    const [creatorFeeMode,      setCreatorFeeMode]      = useState(tentListingData.creatorFee > 1 ? 'higher' : 'lower');
+    const [tentPrice,     setTentPrice]     = useState(tentListingData.tentPrice || 35);
+    const [tentPriceMode, setTentPriceMode] = useState(tentListingData.tentPrice > customFeeSettings.lower.max ? 'higher' : 'lower');
 
-    const inputLabelRef = useRef(null);
-    const [labelWidth, setLabelWidth] = useState(0);
-    useEffect(() => {
-        setLabelWidth(inputLabelRef.current.offsetWidth);
-    }, []);
+    const debouncedTentPrice = useDebounce(tentPrice, 500);
 
     useEffect(() => {
-        const formData = _getFormData();
-        rootDispatch({
-            type    : 'UPDATE_LISTING_DATA',
-            payload : formData
-        });
+        (async () => {
+            const ethPrice = await Helpers.getUsdToEth(debouncedTentPrice);
+            rootDispatch({
+                type    : 'UPDATE_LISTING_DATA',
+                payload : {tentPrice, ethPrice}
+            });
+        })();
     }, [
-        particleAssetPair,
-        particleCreatorFee,
+        debouncedTentPrice,
     ]);
 
-    const _getFormData = () => {
-        return {
-            assetPair: particleAssetPair,
-            creatorFee: particleCreatorFee,
-        };
+    const updateTentPrice = evt => {
+        setTentPrice(evt.target.value);
     };
 
-    const updateParticleAssetPair = evt => {
-        setParticleAssetPair(evt.target.value);
-    };
-
-    const updateParticleCreatorFee = evt => {
-        setParticleCreatorFee(evt.target.value);
-    };
-
-    const slideParticleCreatorFee = (evt, newValue) => {
-        setParticleCreatorFee(newValue);
+    const slideTentPrice = (evt, newValue) => {
+        setTentPrice(newValue);
     };
 
     const toggleHigherFees = (evt) => {
         evt.preventDefault();
         evt.stopPropagation();
-        setParticleCreatorFee(customFeeSettings.lower.max);
-        setCreatorFeeMode(creatorFeeMode === 'lower' ? 'higher' : 'lower');
+        setTentPrice(customFeeSettings.lower.max);
+        setTentPriceMode(tentPriceMode === 'lower' ? 'higher' : 'lower');
     };
 
     const _handleSubmit = async evt => {
@@ -88,53 +75,54 @@ const TentAttributes = ({ back, next }) => {
         <>
             <Box py={2}>
                 <Grid container spacing={3} className={classes.gridRow}>
-                    <Grid item xs={12} sm={6}>
-                        <FormControl variant="outlined" className={classes.formControl}>
-                            <InputLabel ref={inputLabelRef} id="particleAssetPairLabel">
-                                Asset-Pair
-                            </InputLabel>
-                            <Select
-                                id="particleAssetPair"
-                                labelId="particleAssetPairLabel"
-                                labelWidth={labelWidth}
-                                value={particleAssetPair}
-                                onChange={updateParticleAssetPair}
-                            >
-                                <MenuItem value={'chai'}>DAI - CHAI</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12}>
                         <Grid container spacing={0}>
-                            <Grid item xs={9} md={6}>
-                                <TextField
-                                    id="particleTypeCreatorFee"
-                                    label="Deposit Fee (as %)"
-                                    variant="outlined"
-                                    type="number"
-                                    min={customFeeSettings[creatorFeeMode].min}
-                                    max={customFeeSettings[creatorFeeMode].max}
-                                    step={customFeeSettings[creatorFeeMode].step}
-                                    value={particleCreatorFee}
-                                    onChange={updateParticleCreatorFee}
-                                    fullWidth
-                                />
+                            <Grid item xs={1} sm={2}>&nbsp;</Grid>
+                            <Grid item xs={6} sm={6}>
+                                <FormControl fullWidth variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-amount">Tent Price</InputLabel>
+                                    <OutlinedInput
+                                        id="tentPriceId"
+                                        value={tentPrice}
+                                        labelWidth={85}
+                                        type="number"
+                                        fullWidth
+                                        min={customFeeSettings[tentPriceMode].min}
+                                        max={customFeeSettings[tentPriceMode].max}
+                                        step={customFeeSettings[tentPriceMode].step}
+                                        onChange={updateTentPrice}
+                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                    />
+                                </FormControl>
                             </Grid>
-                            <Grid item xs={3} md={6}>
-                                <Button onClick={toggleHigherFees} color="secondary">
-                                    {creatorFeeMode === 'higher' ? 'lower' : 'higher'}
-                                </Button>
+                            <Grid item xs={3} sm={2}>
+                                <Box py={1} px={2}>
+                                    <Button
+                                        variant="outlined"
+                                        color="secondary"
+                                        size="large"
+                                        onClick={toggleHigherFees}
+                                    >
+                                        {tentPriceMode === 'higher' ? 'lower' : 'higher'}
+                                    </Button>
+                                </Box>
                             </Grid>
+                            <Grid item xs={1} sm={2}>&nbsp;</Grid>
                         </Grid>
 
-                        <Slider
-                            min={customFeeSettings[creatorFeeMode].min}
-                            max={customFeeSettings[creatorFeeMode].max}
-                            step={customFeeSettings[creatorFeeMode].step}
-                            value={particleCreatorFee}
-                            onChange={slideParticleCreatorFee}
-                        />
+                        <Grid container spacing={0}>
+                            <Grid item xs={1} sm={2}>&nbsp;</Grid>
+                            <Grid item xs={10} sm={8}>
+                                <Slider
+                                    min={customFeeSettings[tentPriceMode].min}
+                                    max={customFeeSettings[tentPriceMode].max}
+                                    step={customFeeSettings[tentPriceMode].step}
+                                    value={tentPrice}
+                                    onChange={slideTentPrice}
+                                />
+                            </Grid>
+                            <Grid item xs={1} sm={2}>&nbsp;</Grid>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Box>

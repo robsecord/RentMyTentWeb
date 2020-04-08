@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
-import SEO from '../../components/seo';
+import SEO from '../../common/seo';
 import ListingWizard from '../components/listing/ListingWizard';
 import RegisterMember from '../components/registration/RegisterMember';
 import { ContractHelpers } from '../blockchain/contract-helpers';

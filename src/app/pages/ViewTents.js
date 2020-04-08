@@ -8,7 +8,7 @@ import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
-import SEO from '../../components/seo';
+import SEO from '../../common/seo';
 import { AppTabs } from '../components/AppTabs';
 
 // Data Context for State

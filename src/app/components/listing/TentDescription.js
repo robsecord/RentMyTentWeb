@@ -1,12 +1,14 @@
 // Frameworks
 import React, { useState, useEffect, useContext } from 'react';
 import { Buffer } from 'buffer';
-import Img from 'gatsby-image';
 import * as _ from 'lodash';
 
 // Data Context for State
 import { RootContext } from '../../stores/root.store';
-import { WalletContext } from '../../stores/wallet.store';
+
+// App Components
+import { Helpers } from '../../../utils/helpers';
+import PlaceholderTent from '../../image-components/PlaceholderTent';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -41,15 +43,20 @@ const useCustomStyles = makeStyles(theme => ({
     fileNameLabel: {
         verticalAlign: 'middle',
     },
+    tentImageContainer: {
+        width: '100%',
+        borderRadius: 5,
+        border: `1px solid ${theme.palette.grey[400]}`,
+        '--aspect-ratio': '6/9',
+    },
     tentImage: {
         maxWidth: '100%',
         maxHeight: 400,
         borderRadius: 5,
-    }
+    },
 }));
 
 
-// Create Route
 const TentDescription = ({ next }) => {
     const classes = useRootStyles();
     const customClasses = useCustomStyles();
@@ -57,27 +64,30 @@ const TentDescription = ({ next }) => {
     const [ rootState, rootDispatch ] = useContext(RootContext);
     const { connectionState, tentListingData } = rootState;
 
-    const [ walletState ] = useContext(WalletContext);
-    const { allReady, connectedAddress } = walletState;
-
     const [tentName,         setTentName]         = useState(tentListingData.name || '');
     const [tentDesc,         setTentDesc]         = useState(tentListingData.desc || '');
-    const [tentCreator,      setTentCreator]      = useState(tentListingData.creator || '');
+    const [tentAge,          setTentAge]          = useState(tentListingData.age || '0');
+    const [tentBrand,        setTentBrand]        = useState(tentListingData.brand || '');
+    const [tentCapacity,     setTentCapacity]     = useState(tentListingData.capacity || '1');
     const [tentImage,        setTentImage]        = useState(tentListingData.image || 'Upload Image of Tent *');
     const [tentImageBuffer,  setTentImageBuffer]  = useState(tentListingData.imageBuffer || null);
     const [tentImageBase64,  setTentImageBase64]  = useState(tentListingData.imageBase64 || null);
     const [formValidated,    setFormValidated]    = useState(false);
 
-    const [isTentNameValid,    setTentNameValid]    = useState(true);
-    const [isTentDescValid,    setTentDescValid]    = useState(true);
-    const [isTentCreatorValid, setTentCreatorValid] = useState(true);
-    const [isTentImageValid,   setTentImageValid]   = useState(true);
+    const [isTentNameValid,     setTentNameValid]     = useState(true);
+    const [isTentDescValid,     setTentDescValid]     = useState(true);
+    const [isTentAgeValid,      setTentAgeValid]      = useState(true);
+    const [isTentBrandValid,    setTentBrandValid]    = useState(true);
+    const [isTentCapacityValid, setTentCapacityValid] = useState(true);
+    const [isTentImageValid,    setTentImageValid]    = useState(true);
 
     useEffect(() => {
-        if (allReady && _.isEmpty(tentCreator)) {
-            setTentCreator(connectedAddress);
-            setTentCreatorValid(!_.isEmpty(connectedAddress));
-        }
+        (async () => {
+            if (_.isEmpty(tentName)) {
+                const name = await Helpers.getSampleName();
+                setTentName(name);
+            }
+        })();
     }, []);
 
     useEffect(() => {
@@ -92,7 +102,9 @@ const TentDescription = ({ next }) => {
         connectionState,
         tentName,
         tentDesc,
-        tentCreator,
+        tentAge,
+        tentBrand,
+        tentCapacity,
         tentImage,
         tentImageBuffer,
         tentImageBase64,
@@ -102,16 +114,20 @@ const TentDescription = ({ next }) => {
         return {
             name        : _.trim(tentName),
             desc        : _.trim(tentDesc),
-            creator     : tentCreator,
-            image        : tentImage,
-            imageBuffer  : tentImageBuffer,
-            imageBase64  : tentImageBase64,
+            age         : tentAge,
+            brand       : tentBrand,
+            capacity    : tentCapacity,
+            image       : tentImage,
+            imageBuffer : tentImageBuffer,
+            imageBase64 : tentImageBase64,
         };
     };
 
     const _validateAll = () => {
         setTentNameValid(!_.isEmpty(tentName));
-        setTentCreatorValid(!_.isEmpty(tentCreator));
+        setTentAgeValid(!_.isEmpty(tentAge));
+        setTentBrandValid(!_.isEmpty(tentBrand));
+        setTentCapacityValid(!_.isEmpty(tentCapacity));
         setTentImageValid(!_.isEmpty(tentImageBuffer));
         setTentDescValid(!_.isEmpty(tentDesc));
     };
@@ -121,7 +137,9 @@ const TentDescription = ({ next }) => {
             _.isEmpty(connectionState),
             !_.isEmpty(tentName),
             !_.isEmpty(tentDesc),
-            !_.isEmpty(tentCreator),
+            !_.isEmpty(tentAge),
+            !_.isEmpty(tentBrand),
+            !_.isEmpty(tentCapacity),
             !_.isEmpty(tentImageBuffer),
         ];
         return _.every(conditions, Boolean);
@@ -131,16 +149,34 @@ const TentDescription = ({ next }) => {
         return _.last(filename.split('\\'));
     };
 
+    const _updateTentDesc = evt => {
+        const value = evt.target.value;
+        setTentDesc(value);
+        setTentDescValid(!_.isEmpty(value));
+    };
+
     const _updateTentName = evt => {
         const value = evt.target.value;
         setTentName(value);
         setTentNameValid(!_.isEmpty(value));
     };
 
-    const _updateTentCreator = evt => {
+    const _updateTentBrand = evt => {
         const value = _.trim(evt.target.value);
-        setTentCreator(value);
-        setTentCreatorValid(!_.isEmpty(value));
+        setTentBrand(value);
+        setTentBrandValid(!_.isEmpty(value));
+    };
+
+    const _updateTentAge = evt => {
+        const value = _.trim(evt.target.value);
+        setTentAge(value);
+        setTentAgeValid(!_.isEmpty(value));
+    };
+
+    const _updateTentCapacity = evt => {
+        const value = _.trim(evt.target.value);
+        setTentCapacity(value);
+        setTentCapacityValid(!_.isEmpty(value));
     };
 
     const _updateTentImage = evt => {
@@ -164,12 +200,6 @@ const TentDescription = ({ next }) => {
         };
     };
 
-    const _updateTentDesc = evt => {
-        const value = evt.target.value;
-        setTentDesc(value);
-        setTentDescValid(!_.isEmpty(value));
-    };
-
     const _handleSubmit = async evt => {
         evt.preventDefault();
         if (!formValidated) {
@@ -180,53 +210,85 @@ const TentDescription = ({ next }) => {
 
     return (
         <>
-            <Box py={3}>
-                <Grid container spacing={3} className={classes.gridRow}>
-                    <Grid item xs={6}>
-                        <TextField
-                            id="tentTypeName"
-                            label="Name"
-                            variant="outlined"
-                            onChange={_updateTentName}
-                            value={tentName}
-                            fullWidth
-                            required
-                            error={!isTentNameValid}
-                        />
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField
-                            id="tentTypeCreator"
-                            label="Creator"
-                            variant="outlined"
-                            onChange={_updateTentCreator}
-                            value={tentCreator}
-                            fullWidth
-                            required
-                            error={!isTentCreatorValid}
-                        />
-                    </Grid>
-                </Grid>
-
-                <Grid container spacing={3} className={classes.gridRow}>
-                    <Grid item xs={12}>
-                        <TextField
-                            id="tentTypeDesc"
-                            label="Full Description"
-                            variant="outlined"
-                            onChange={_updateTentDesc}
-                            value={tentDesc}
-                            multiline
-                            rows="4"
-                            fullWidth
-                            required
-                            error={!isTentDescValid}
-                        />
-                    </Grid>
-                </Grid>
-
+            <Box py={1}>
                 <Grid container spacing={3} className={classes.gridRow}>
                     <Grid item xs={12} sm={6}>
+                        <Grid container spacing={3} className={classes.gridRow}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="tentTypeDesc"
+                                    label="Full Description"
+                                    variant="outlined"
+                                    onChange={_updateTentDesc}
+                                    value={tentDesc}
+                                    multiline
+                                    rows="4"
+                                    fullWidth
+                                    required
+                                    error={!isTentDescValid}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="tentTypeBrand"
+                                    label="Brand"
+                                    variant="outlined"
+                                    onChange={_updateTentBrand}
+                                    value={tentBrand}
+                                    fullWidth
+                                    required
+                                    error={!isTentBrandValid}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="tentTypeCapacity"
+                                    label="Capacity"
+                                    variant="outlined"
+                                    type="number"
+                                    onChange={_updateTentCapacity}
+                                    value={tentCapacity}
+                                    fullWidth
+                                    required
+                                    error={!isTentCapacityValid}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="tentTypeAge"
+                                    label="Age in Years"
+                                    variant="outlined"
+                                    type="number"
+                                    onChange={_updateTentAge}
+                                    value={tentAge}
+                                    fullWidth
+                                    required
+                                    error={!isTentAgeValid}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    id="tentTypeName"
+                                    label="Name"
+                                    variant="outlined"
+                                    onChange={_updateTentName}
+                                    value={tentName}
+                                    fullWidth
+                                    required
+                                    error={!isTentNameValid}
+                                />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                        <div className={customClasses.tentImageContainer}>
+                            {
+                                !_.isEmpty(tentImageBase64)
+                                    ? <img src={tentImageBase64} className={customClasses.tentImage} />
+                                    : <PlaceholderTent />
+                            }
+                        </div>
                         <Grid
                             container
                             direction="row"
@@ -271,16 +333,21 @@ const TentDescription = ({ next }) => {
                             </FormControl>
                         </Grid>
                     </Grid>
-
-                    <Grid item xs={12} sm={6}>
-                        {
-                            !_.isEmpty(tentImageBase64) && (
-                                <img src={tentImageBase64} className={customClasses.tentImage} />
-                            )
-                        }
-                    </Grid>
                 </Grid>
             </Box>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             <Divider />
 

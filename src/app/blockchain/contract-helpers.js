@@ -3,6 +3,7 @@ import React from 'react';
 import * as _ from 'lodash';
 
 // App Components
+import { Helpers } from '../../utils/helpers';
 import { GLOBALS } from '../../utils/globals';
 import IPFS from '../../utils/ipfs';
 
@@ -66,7 +67,6 @@ ContractHelpers.saveMetadata = ({ tokenData, txDispatch }) => {
     return new Promise(async (resolve, reject) => {
         try {
             // Save Image File to IPFS
-            // onProgress('Saving Image to IPFS..');
             txDispatch({
                 type: 'STREAM_TRANSITION', payload: {
                     streamTransitions: [{to: 'CREATE', transition: 'IPFS_IMG'}]
@@ -85,7 +85,6 @@ ContractHelpers.saveMetadata = ({ tokenData, txDispatch }) => {
             // metadata.attributes = [];
 
             // Save Metadata to IPFS
-            // onProgress('Saving Metadata to IPFS..');
             txDispatch({
                 type: 'STREAM_TRANSITION', payload: {
                     streamTransitions: [{to: 'CREATE', transition: 'IPFS_META'}]
@@ -111,6 +110,7 @@ ContractHelpers.registerTent = ({from, tokenData, txDispatch}) => {
         try {
             txDispatch({type: 'BEGIN_TX'});
             console.log('ContractHelpers.registerTent');
+            console.log(' - tokenData', tokenData);
 
             // Save Token Metadata
             const {jsonFileUrl} = await ContractHelpers.saveMetadata({tokenData, txDispatch});
@@ -124,12 +124,8 @@ ContractHelpers.registerTent = ({from, tokenData, txDispatch}) => {
 
             // Transaction Args
             const tx = {from};
-            const args = [
-                '12300000000000000000', // tokenData.initialPrice,
-                jsonFileUrl,
-            ];
-            console.log(' - tx', tx);
-            console.log(' - args', args);
+            const weiPrice = Helpers.toWei(tokenData.ethPrice);
+            const args = [weiPrice, jsonFileUrl];
 
             // Submit Transaction and wait for Receipt
             rentMyTent.sendContractTx('listNewTent', tx, args, (err, txHash) => {

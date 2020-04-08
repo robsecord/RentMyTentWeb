@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 // Layout Components
 import Layout from '../layout/layout';
-import SEO from '../components/seo';
+import SEO from '../common/seo';
 import { GLOBALS } from '../utils/globals';
 
 // Custom Theme

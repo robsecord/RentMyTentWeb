@@ -157,6 +157,7 @@ const TxStreamView = () => {
 
             if (currentState === 'CREATE') {
                 setCurrentStreamState(STATE_MSG[currentTransition]);
+                setOpenModal(true);
             } else if (currentState === 'PENDING') {
                 setCurrentStreamState(STATE_MSG.PENDING);
             } else if (currentState === 'REPLACED') {

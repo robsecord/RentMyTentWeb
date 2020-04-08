@@ -190,7 +190,7 @@ const RegisterMember = ({ elevation }) => {
                                 contractName="RentMyTent"
                                 method="getMembershipFee"
                                 methodArgs={[]}
-                                formatValue={Helpers.toEther}
+                                formatValue={Helpers.toEtherWithLocale}
                                 defaultValue={''}
                             />
                         </Box>

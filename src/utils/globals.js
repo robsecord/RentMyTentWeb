@@ -33,6 +33,12 @@ GLOBALS.FEES = {
     REGISTER_TENT   : '10000000000000000',  // TODO: Remove
 };
 
+GLOBALS.ETH_PRICE = {
+    API         : 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum',
+    CACHE_TIME  : 5 * 60 * 1000,
+    PRECISION   : 4,
+};
+
 GLOBALS.MIN_BLOCK_CONFIRMATIONS = 3;
 
 GLOBALS.SIDEMENU_WIDTH = 274;
