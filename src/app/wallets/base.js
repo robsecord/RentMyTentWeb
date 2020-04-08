@@ -30,6 +30,10 @@ class IWalletBase {
         return await this.changeUserAccount();
     }
 
+    async reconnect() {
+        return await this.changeUserAccount();
+    }
+
     async disconnect() {
         this.dispatchState({type: 'LOGOUT'});
     }

@@ -153,8 +153,7 @@ ContractHelpers.registerMember = ({from, memberName, memberAddress, txDispatch})
 
         try {
             const ethPrice = GLOBALS.FEES.REGISTER_MEMBER;
-            txDispatch({type: 'BEGIN_TX'});
-            console.log('ContractHelpers.registerMember');
+            txDispatch({type: 'BEGIN_TX', transactionType: 'REGISTER'});
 
             // Update Transition State
             txDispatch({
@@ -166,8 +165,6 @@ ContractHelpers.registerMember = ({from, memberName, memberAddress, txDispatch})
             // Transaction Args
             const tx = {from, value: ethPrice};
             const args = [memberAddress, memberName];
-            console.log(' - tx', tx);
-            console.log(' - args', args);
 
             // Submit Transaction and wait for Receipt
             rentMyTent.sendContractTx('registerMember', tx, args, (err, txHash) => {

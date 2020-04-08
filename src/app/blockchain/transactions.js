@@ -111,7 +111,6 @@ class Transactions {
         LocalCache.set('streamTxHash', transactionHash);
 
         this.stream = await this.client.graphql(streamTransactionQuery, (message) => {
-
             if (message.type === 'error') {
                 this.txDispatch({type: 'STREAM_ERROR', payload: {
                     streamError: message.errors[0]['message']
@@ -120,13 +119,12 @@ class Transactions {
 
             if (message.type === 'data') {
                 const newTransition = {
-                    key         : `transition-${count}`,
+                    key         : `transition-${count++}`,
                     transition  : message['data']['transactionLifecycle']['transitionName'],
                     from        : message['data']['transactionLifecycle']['previousState'],
                     to          : message['data']['transactionLifecycle']['currentState'],
                     data        : message['data']
                 };
-                count++;
                 currentTransitions = [...currentTransitions, newTransition];
                 confirmations = _.get(newTransition, 'data.transactionLifecycle.transition.confirmations', 0);
 

@@ -45,6 +45,11 @@ class Wallet {
         return await this.wallet.connect();
     }
 
+    async reconnect() {
+        if (!this.wallet) { return; }
+        return await this.wallet.reconnect();
+    }
+
     async disconnect() {
         if (!this.wallet) { return; }
         await this.wallet.disconnect();

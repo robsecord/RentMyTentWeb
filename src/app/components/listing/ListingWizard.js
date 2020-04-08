@@ -1,5 +1,6 @@
 // Frameworks
 import React, { useState, useEffect, useContext } from 'react';
+import * as _ from 'lodash';
 
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,6 +25,7 @@ import partyPopperImg from '../../../images/party-popper.png';
 
 // Data Context for State
 import { RootContext } from '../../stores/root.store';
+import { TransactionContext } from '../../stores/transaction.store';
 
 
 const useCustomStyles = makeStyles(theme => ({
@@ -73,20 +75,25 @@ const getStepContent = ({onSubmitForm, step, back, next}) => {
     }
 };
 
+let _previousState = '';
 
 function ListingWizard({ onSubmitForm }) {
     const customClasses = useCustomStyles();
 
     const [, rootDispatch] = useContext(RootContext);
 
+    const [ txState ] = useContext(TransactionContext);
+    const { streamState } = txState;
+
     const [activeStep, setActiveStep] = useState(0);
     const steps = getSteps();
 
-    // useEffect(() => {
-    //     return () => {
-    //         rootDispatch({type: 'CLEAR_LISTING_DATA'});
-    //     };
-    // }, []);
+    useEffect(() => {
+        if (_.isEmpty(streamState) && _previousState === 'started') {
+            setActiveStep(prevActiveStep => prevActiveStep - 1);
+        }
+        _previousState = streamState;
+    }, [streamState]);
 
     const handleNext = () => {
         setActiveStep(prevActiveStep => prevActiveStep + 1);
@@ -104,6 +111,55 @@ function ListingWizard({ onSubmitForm }) {
     const _handleSubmitForm = (formData) => {
         setActiveStep(prevActiveStep => prevActiveStep + 1);
         onSubmitForm(formData);
+    };
+
+    const _getFinalStepNotice = () => {
+        if (activeStep === steps.length) {
+            if (streamState === 'started') {
+                return _getTxStartedNotice();
+            } else if (!_.isEmpty(streamState)) {
+                return _getTxCompletedNotice();
+            }
+        }
+        return '';
+    };
+
+    const _getTxStartedNotice = () => {
+        return (
+            <Paper square elevation={0} className={customClasses.resetContainer}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={partyPopperImg} alt="Party Popper" style={{width: 200}} />
+                </Grid>
+                <Box py={3}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Typography>Transaction Started!  Please check your wallet to Sign the Transaction!</Typography>
+                    </Grid>
+                </Box>
+            </Paper>
+        );
+    };
+
+    const _getTxCompletedNotice = () => {
+        return (
+            <Paper square elevation={0} className={customClasses.resetContainer}>
+                <Grid container direction="row" justify="center" alignItems="center">
+                    <img src={partyPopperImg} alt="Party Popper" style={{width: 200}} />
+                </Grid>
+                <Box py={3}>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Typography>Finished! Your Tent-Listing is being created!</Typography>
+                    </Grid>
+                </Box>
+                <Box py={2}>
+                    <Divider />
+                </Box>
+                <Grid container direction="row" justify="center" alignItems="center">
+                    <Button onClick={handleReset} variant="outlined" color="primary" className={customClasses.button}>
+                        Restart
+                    </Button>
+                </Grid>
+            </Paper>
+        );
     };
 
     return (
@@ -125,26 +181,9 @@ function ListingWizard({ onSubmitForm }) {
                     </Step>
                 ))}
             </Stepper>
-            {activeStep === steps.length && (
-                <Paper square elevation={0} className={customClasses.resetContainer}>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                        <img src={partyPopperImg} alt="Party Popper" style={{width: 200}} />
-                    </Grid>
-                    <Box py={3}>
-                        <Grid container direction="row" justify="center" alignItems="center">
-                            <Typography>Finished! Your Tent-Listing is being created!</Typography>
-                        </Grid>
-                    </Box>
-                    <Box py={2}>
-                        <Divider />
-                    </Box>
-                    <Grid container direction="row" justify="center" alignItems="center">
-                        <Button onClick={handleReset} variant="outlined" color="primary" className={customClasses.button}>
-                            Restart
-                        </Button>
-                    </Grid>
-                </Paper>
-            )}
+            {
+                _getFinalStepNotice()
+            }
         </div>
     );
 }

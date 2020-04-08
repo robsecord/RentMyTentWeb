@@ -70,17 +70,10 @@ Helpers.getUsdToEth = async (amountUSD) => {
     return _.round(amountUSD * (1 / ethPrice), GLOBALS.ETH_PRICE.PRECISION);
 };
 
-// Helpers.toEther = (str) => {
-//     const web3 = Wallet.instance().getWeb3();
-//     if (!web3) { return str; }
-//     return web3.utils.fromWei(str, 'ether');
-// };
-
-
 Helpers.toEther = (value) => {
-    if (!_.isString(value)) {
-        value = value.toLocaleString('fullwide', {useGrouping: false});
-    }
+    // if (!_.isString(value)) {
+    //     value = value.toLocaleString('fullwide', {useGrouping: false});
+    // }
     const web3 = Wallet.instance().getWeb3();
     if (!web3) { return value; }
     return web3.utils.fromWei(value, 'ether');

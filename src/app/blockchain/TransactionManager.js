@@ -3,6 +3,7 @@ import React, { useEffect, useContext } from 'react';
 import * as _ from 'lodash';
 
 // App Components
+import Wallet from '../wallets';
 import Transactions from '../blockchain/transactions';
 import TxStreamView from '../components/TxStreamView';
 
@@ -11,8 +12,9 @@ import { TransactionContext } from '../stores/transaction.store';
 
 
 const TransactionManager = ({  }) => {
+    const wallet = Wallet.instance();
     const [ txState, txDispatch] = useContext(TransactionContext);
-    const { submittedTransaction } = txState;
+    const { transactionType, submittedTransaction, streamState } = txState;
 
     useEffect(() => {
         if (!_.isEmpty(submittedTransaction)) {
@@ -30,6 +32,13 @@ const TransactionManager = ({  }) => {
             });
         }
     }, [submittedTransaction]);
+
+    // Reconnect after Registration
+    useEffect(() => {
+        if (transactionType === 'REGISTER' && streamState === 'completed') {
+            wallet.reconnect();
+        }
+    }, [wallet, streamState, transactionType]);
 
     return (
         <TxStreamView />

@@ -81,13 +81,18 @@ const TentDescription = ({ next }) => {
     const [isTentCapacityValid, setTentCapacityValid] = useState(true);
     const [isTentImageValid,    setTentImageValid]    = useState(true);
 
+    let _componentLoaded = true;
     useEffect(() => {
         (async () => {
-            if (_.isEmpty(tentName)) {
+            if (_.isEmpty(tentName) && _componentLoaded) {
                 const name = await Helpers.getSampleName();
                 setTentName(name);
             }
         })();
+
+        return () => {
+            _componentLoaded = false;
+        };
     }, []);
 
     useEffect(() => {

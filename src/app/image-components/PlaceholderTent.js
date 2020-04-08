@@ -24,7 +24,7 @@ const PlaceholderTent = () => {
         }
       }
     }
-  `)
+  `);
 
   return <Img fluid={data.placeholderTent.childImageSharp.fluid} />
 };

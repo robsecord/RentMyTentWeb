@@ -5,6 +5,7 @@ const TransactionReducer = (state, action) => {
             return {
                 ...state,
                 submittedTransaction: {},
+                transactionType: action.transactionType,
                 transactionHash: '',
                 streamState: 'started',
                 streamError: '',
@@ -45,6 +46,7 @@ const TransactionReducer = (state, action) => {
             return {
                 ...state,
                 submittedTransaction: {},
+                transactionType: '',
                 transactionHash: '',
                 streamState: '',
                 streamError: '',
