@@ -1,9 +1,12 @@
 
 const title    = 'Rent My Tent';
 const subtitle = 'No tent left behind!';
-const prodUrl  = 'https://rent-my-tent.eth.link'; // No trailing slash
 const imageSm  = 'src/images/favicon/android-chrome-192x192.png';
 const imageLg  = 'src/images/favicon/android-chrome-256x256.png';
+
+const stageUrl = 'https://rent-my-tent.org'; // No trailing slash
+const prodUrl  = 'https://rent-my-tent.org'; // No trailing slash
+const currentUrl = stageUrl;
 
 const site = {
     title           : title,
@@ -11,7 +14,7 @@ const site = {
     desc            : 'Rent Tents on the Ethereum Blockchain!',
     author          : 'Rent-My-Tent-Team',
     twitterUsername : '@RentMyTent',
-    url             : prodUrl,
+    url             : currentUrl,
     logoUrl         : imageSm,
     image           : imageSm,
 };
@@ -19,7 +22,7 @@ const site = {
 const manifest = {
     name            : title,
     shortName       : subtitle, // max 12 characters
-    startUrl        : prodUrl,
+    startUrl        : currentUrl,
     backgroundColor : '#343434',
     themeColor      : '#EC407A',
     display         : 'standalone',
@@ -30,7 +33,7 @@ module.exports = {
     site,
     manifest,
 
-    pathPrefix: '__GATSBY_IPFS_PATH_PREFIX__',
+    pathPrefix: '/',
 
     // social
     socialLinks: [

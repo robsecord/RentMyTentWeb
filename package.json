@@ -1,7 +1,7 @@
 {
   "name": "rent-my-tent-web",
   "description": "Rent My Tent",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Rent-My-Tent-Team",
   "keywords": [],
   "scripts": {
@@ -39,10 +39,10 @@
     "gatsby": "^2.19.17",
     "gatsby-image": "^2.2.41",
     "gatsby-plugin-create-client-paths": "^2.1.22",
-    "gatsby-plugin-ipfs": "^2.0.2",
     "gatsby-plugin-lodash": "^3.1.20",
     "gatsby-plugin-manifest": "^2.2.41",
     "gatsby-plugin-material-ui": "^2.1.6",
+    "gatsby-plugin-netlify": "^2.2.1",
     "gatsby-plugin-offline": "^3.0.34",
     "gatsby-plugin-prefetch-google-fonts": "^1.4.3",
     "gatsby-plugin-react-helmet": "^3.1.22",
