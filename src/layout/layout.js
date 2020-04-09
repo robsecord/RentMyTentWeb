@@ -41,7 +41,7 @@ const Layout = ({children, header, footer}) => {
     if (_.isFunction(header)) {
         header = header({siteTitle: data.site.siteMetadata.title, onRedirect: _appRedirect});
     } else {
-        header = (<Header siteTitle={data.site.siteMetadata.title} onClick={_appRedirect()}/>);
+        header = (<Header siteTitle={data.site.siteMetadata.title} onRedirect={_appRedirect}/>);
     }
 
     if (_.isFunction(footer)) {
