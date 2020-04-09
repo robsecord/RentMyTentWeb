@@ -3,16 +3,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { navigate, useStaticQuery, graphql } from 'gatsby';
+import * as _ from 'lodash';
 
 import './styles/reset.css';
 import './styles/overrides.css';
 import theme from './styles/root.theme';
 
-// Material UI
-import Box from '@material-ui/core/Box';
-
 // Layout Components
-import Header from '../common/header';
+import Header from '../common/Header';
+import Footer from '../common/Footer';
 
 // Common
 import { GLOBALS } from '../utils/globals';
@@ -22,7 +21,7 @@ import useLandingStyles from '../layout/styles/landing.styles';
 
 
 // Layout Wrapper
-const Layout = ({children, noHeader}) => {
+const Layout = ({children, header, footer}) => {
     const classes = useLandingStyles();
     const data = useStaticQuery(graphql`
         query SiteTitleQuery {
@@ -34,22 +33,31 @@ const Layout = ({children, noHeader}) => {
         }
     `);
 
-    const _goHome = () => { navigate(GLOBALS.APP_ROOT) };
+    const _appRedirect = (route = '') => (evt) => {
+        evt.preventDefault();
+        navigate(`${GLOBALS.APP_ROOT}/${route}`)
+    };
+
+    if (_.isFunction(header)) {
+        header = header({siteTitle: data.site.siteMetadata.title, onRedirect: _appRedirect});
+    } else {
+        header = (<Header siteTitle={data.site.siteMetadata.title} onClick={_appRedirect()}/>);
+    }
+
+    if (_.isFunction(footer)) {
+        footer = footer();
+    } else {
+        footer = (<Footer />);
+    }
 
     return (
         <ThemeProvider theme={theme}>
-            {
-                !noHeader && (
-                    <Header siteTitle={data.site.siteMetadata.title} onClick={_goHome}/>
-                )
-            }
             <div className={classes.primaryContainer}>
-                <main>{children}</main>
-                <footer>
-                    <Box mt={4}>
-                        &copy; {new Date().getFullYear()}, Rent My Tent
-                    </Box>
-                </footer>
+                {header}
+                <main className={classes.primaryContent}>
+                    {children}
+                </main>
+                {footer}
             </div>
         </ThemeProvider>
     );

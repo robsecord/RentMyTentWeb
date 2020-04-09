@@ -1,10 +1,12 @@
 // Frameworks
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'gatsby';
+
+// Material UI
+import Link from '@material-ui/core/Link';
 
 
-const Header = ({siteTitle}) => (
+const Header = ({siteTitle, onRedirect}) => (
     <header
         style={{
             background: `black`,
@@ -20,7 +22,8 @@ const Header = ({siteTitle}) => (
         >
             <h1 style={{margin: 0}}>
                 <Link
-                    to="/"
+                    href="#"
+                    onClick={onRedirect()}
                     style={{
                         color: `white`,
                         textDecoration: `none`,
@@ -34,11 +37,8 @@ const Header = ({siteTitle}) => (
 );
 
 Header.propTypes = {
-    siteTitle: PropTypes.string,
-};
-
-Header.defaultProps = {
-    siteTitle: ``,
+    siteTitle: PropTypes.string.isRequired,
+    onHomeClick: PropTypes.func.isRequired,
 };
 
 export default Header;

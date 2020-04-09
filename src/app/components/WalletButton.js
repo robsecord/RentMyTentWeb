@@ -24,7 +24,7 @@ import { WalletContext } from '../stores/wallet.store';
 const useCustomStyles = makeStyles(theme => ({
     walletButton: {
         marginLeft: 'auto',
-        color: theme.palette.grey[400],
+        color: theme.palette.grey[700],
         textTransform: 'none',
     },
     rounded: {

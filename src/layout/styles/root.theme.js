@@ -12,10 +12,10 @@ export default createMuiTheme({
     },
     palette: {
         // type: 'dark',
-        // background: {
-        //     default: '#212054',
-        //     paper:   '#222',
-        // },
+        background: {
+            default: '#f5ead2',
+            paper:   '#f0f0f0',
+        },
         primary: {
             main: '#ed7a34',
         },

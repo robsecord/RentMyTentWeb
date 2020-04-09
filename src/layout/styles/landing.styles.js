@@ -4,31 +4,73 @@ import React from 'react';
 // Material UI
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(theme => ({
-    primaryContainer: {
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `0 20px 30px`,
-        paddingTop: 0,
-
-        [theme.breakpoints.down('sm')]: {
-            maxWidth: 'none',
-            width: '100%',
+export default makeStyles(theme => {
+    return {
+        primaryContainer: {
+            background: 'linear-gradient(45deg, #F4BE96 30%, #F5EAD2 90%)',
         },
-    },
-    heroContainer: {
-        height: '100vh',
-    },
-    heroHeader: {
-        margin: '0',
-    },
-    heroPadding: {
-        padding: '30px',
-    },
-    heroMargin: {
-        margin: '100px 0',
-    },
-    centerAlign: {
-        textAlign: 'center',
-    }
-}));
+        primaryContent: {
+            padding: '0 3rem',
+        },
+
+        heroContainer: {
+            height: '70vh',
+        },
+        heroHeader: {
+            height: '15vh',
+            margin: '0',
+            padding: '0 3rem',
+        },
+        heroFooter: {
+            height: '15vh',
+            margin: '0',
+            padding: '0 3rem',
+        },
+
+        heroLogo: {
+            display: 'inline-block',
+            width: 140,
+            padding: 10,
+            color: '#212054',
+            textDecoration: 'none',
+
+            '& span': {
+                display: 'block',
+                marginTop: -10,
+                textAlign: 'center',
+                fontSize: '0.8em',
+                textTransform: 'uppercase',
+            },
+        },
+        heroLogoImg: {
+            margin: '0 10px',
+        },
+
+        heroMenu: {
+            // paddingRight: 50,
+        },
+        heroMenuLink: {
+            padding: '0 20px',
+
+            '&:-webkit-any-link': {
+                color: theme.palette.primary.main,
+                textDecoration: 'none',
+            }
+        },
+
+        heading1: {
+
+        },
+        heading2: {
+
+        },
+        heading3: {
+
+        },
+
+        centerAlign: {
+            textAlign: 'center',
+        },
+
+    };
+});
