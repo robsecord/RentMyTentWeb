@@ -61,7 +61,7 @@ const HeroHeader = ({siteTitle, onRedirect}) => {
 
 HeroHeader.propTypes = {
     siteTitle: PropTypes.string.isRequired,
-    onHomeClick: PropTypes.func.isRequired,
+    onRedirect: PropTypes.func.isRequired,
 };
 
 export default HeroHeader;

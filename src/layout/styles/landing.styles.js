@@ -15,6 +15,14 @@ export default makeStyles(theme => {
 
         heroContainer: {
             height: '70vh',
+            backgroundColor: 'transparent',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom right',
+            backgroundSize: 'auto',
+
+            [theme.breakpoints.down('md')]: {
+                backgroundSize: '50%',
+            },
         },
         heroHeader: {
             height: '15vh',
@@ -59,13 +67,24 @@ export default makeStyles(theme => {
         },
 
         heading1: {
-
+            fontWeight: '700',
+            marginBottom: '0.5rem',
         },
         heading2: {
-
+            color: '#356989',
+            fontWeight: '700',
+            marginBottom: '0.75rem',
         },
         heading3: {
 
+        },
+
+        heroInputContainer: {
+            textAlign: 'right',
+
+            [theme.breakpoints.down('xs')]: {
+                textAlign: 'left',
+            },
         },
 
         centerAlign: {
