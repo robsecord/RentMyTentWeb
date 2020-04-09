@@ -1,5 +1,5 @@
 // Frameworks
-import React from 'react';
+import React, { useState } from 'react';
 import { navigate } from 'gatsby';
 import clsx from 'clsx';
 import * as _ from 'lodash';
@@ -59,6 +59,8 @@ const StyledButton = withStyles(theme => {
 const IndexPage = () => {
     const classes = useLandingStyles();
     const searchLabel = 'Search for a tent';
+
+    const [ searchValue, setSearchValue ] = useState('');
 
     const _gotoApp = (evt) => {
         evt.preventDefault();
@@ -125,7 +127,8 @@ const IndexPage = () => {
                             <OutlinedInput
                                 id="tentSearchId"
                                 type="text"
-                                value={''}
+                                value={searchValue}
+                                onChange={(evt) => { setSearchValue(evt.target.value); }}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
