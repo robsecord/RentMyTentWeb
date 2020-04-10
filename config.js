@@ -6,7 +6,7 @@ const imageLg  = 'src/images/favicon/android-chrome-256x256.png';
 
 const stageUrl = 'https://rent-my-tent.netlify.com'; // No trailing slash
 const prodUrl  = 'https://rent-my-tent.org'; // No trailing slash
-const currentUrl = stageUrl;
+const currentUrl = prodUrl;
 
 const site = {
     title           : title,
