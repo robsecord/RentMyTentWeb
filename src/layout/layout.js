@@ -49,7 +49,7 @@ const Layout = ({children, header, footer}) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className={classes.testBlock} />
+            {/*<div className={classes.testBlock} />*/}
             <div className={classes.primaryContainer}>
                 {header}
                 <main className={classes.primaryContent}>
