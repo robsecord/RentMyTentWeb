@@ -1,10 +1,11 @@
 // Frameworks
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import UseAnimations from 'react-useanimations';
-import * as _ from 'lodash';
 
 // Material UI
 import Alert from '@material-ui/lab/Alert';
+import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
@@ -23,26 +24,33 @@ const ViewTents = ({ location }) => {
     const classes = useRootStyles();
 
     const [ walletState ] = useContext(WalletContext);
-    const { allReady, connectedAddress } = walletState;
-
+    const { allReady } = walletState;
 
     const _getContent = () => {
-        if (!allReady) {
-            return (
-                <Alert
-                    variant="outlined"
-                    severity="warning"
-                    icon={<UseAnimations animationKey="alertTriangle" size={24} />}
-                >
-                    You must connect your account in order to Rent Tents!
-                </Alert>
-            );
-        }
-
         return (
-            <Typography variant={'body1'} component={'p'}>
-                Address: {connectedAddress}
-            </Typography>
+            <>
+                {
+                    !allReady && (
+                        <Alert
+                            variant="outlined"
+                            severity="warning"
+                            icon={<UseAnimations animationKey="alertTriangle" size={24} />}
+                        >
+                            You must connect your account in order to Rent Tents!
+                        </Alert>
+                    )
+                }
+                <Box py={3}>
+                    <Typography variant={'h6'} component={'p'}>
+                        Coming Soon!
+                    </Typography>
+
+                    <Typography variant={'body1'} component={'p'}>
+                        You might find Tents available on 3rd-party Marketplaces such as&nbsp;
+                        <Link href="https://opensea.io/" target="_new">OpenSea</Link>
+                    </Typography>
+                </Box>
+            </>
         );
     };
 

@@ -1,6 +1,7 @@
 // Frameworks
 import React from 'react';
 import PropTypes from 'prop-types';
+import { navigate } from 'gatsby';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';
@@ -9,14 +10,15 @@ import Link from '@material-ui/core/Link';
 // Logo Image
 import Logo from '../images/logo/Rent-my-tent.svg';
 
+// Common
+import { GLOBALS } from '../utils/globals';
+
 // Custom Theme
 import useLandingStyles from '../layout/styles/landing.styles';
 
 
 const HeroHeader = ({siteTitle, onRedirect}) => {
     const classes = useLandingStyles();
-    const preventDefault = (event) => event.preventDefault();
-
     return (
         <header className={classes.heroHeader}>
             <Grid
@@ -30,15 +32,15 @@ const HeroHeader = ({siteTitle, onRedirect}) => {
                 </a>
 
                 <div className={classes.heroMenu}>
-                    <Link to={'about'} className={classes.heroMenuLink} onClick={preventDefault}>
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect('about')}>
                         About
                     </Link>
 
-                    <Link href="#" className={classes.heroMenuLink} onClick={preventDefault}>
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect('how')}>
                         How it works
                     </Link>
 
-                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect('list')}>
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect(`${GLOBALS.APP_ROOT}/list`)}>
                         Get Started
                     </Link>
                 </div>

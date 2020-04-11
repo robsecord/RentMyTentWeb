@@ -92,13 +92,13 @@ const IndexPage = () => {
                     backgroundImage: `url(${background})`,
                 }}
             >
-                <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                    spacing={5}
-                >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        spacing={5}
+                    >
                     <Grid item xs={12}>
                         <Box px={5}>
                             <Typography variant="h3" className={classes.heading1}>
