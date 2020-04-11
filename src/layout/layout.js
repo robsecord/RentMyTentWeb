@@ -13,9 +13,6 @@ import theme from './styles/root.theme';
 import Header from '../common/Header';
 import Footer from '../common/Footer';
 
-// Common
-import { GLOBALS } from '../utils/globals';
-
 // Custom Theme
 import useLandingStyles from '../layout/styles/landing.styles';
 
@@ -33,15 +30,15 @@ const Layout = ({children, header, footer}) => {
         }
     `);
 
-    const _appRedirect = (route = '') => (evt) => {
+    const _onRedirect = (route = '/') => (evt) => {
         evt.preventDefault();
-        navigate(`${GLOBALS.APP_ROOT}/${route}`)
+        navigate(route)
     };
 
     if (_.isFunction(header)) {
-        header = header({siteTitle: data.site.siteMetadata.title, onRedirect: _appRedirect});
+        header = header({siteTitle: data.site.siteMetadata.title, onRedirect: _onRedirect});
     } else {
-        header = (<Header siteTitle={data.site.siteMetadata.title} onRedirect={_appRedirect}/>);
+        header = (<Header siteTitle={data.site.siteMetadata.title} onRedirect={_onRedirect}/>);
     }
 
     if (_.isFunction(footer)) {
@@ -52,6 +49,7 @@ const Layout = ({children, header, footer}) => {
 
     return (
         <ThemeProvider theme={theme}>
+            {/*<div className={classes.testBlock} />*/}
             <div className={classes.primaryContainer}>
                 {header}
                 <main className={classes.primaryContent}>

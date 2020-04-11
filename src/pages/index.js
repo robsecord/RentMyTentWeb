@@ -92,13 +92,13 @@ const IndexPage = () => {
                     backgroundImage: `url(${background})`,
                 }}
             >
-                <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                    spacing={5}
-                >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                        spacing={5}
+                    >
                     <Grid item xs={12}>
                         <Box px={5}>
                             <Typography variant="h3" className={classes.heading1}>
@@ -121,8 +121,8 @@ const IndexPage = () => {
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <Grid item xs={12} sm={6} className={classes.heroInputContainer}>
-                        <FormControl variant="outlined">
+                    <Grid item xs={12} sm={6} md={4} lg={3} className={classes.heroInputContainer}>
+                        <FormControl fullWidth variant="outlined">
                             <InputLabel htmlFor="tentSearchId">{searchLabel}</InputLabel>
                             <OutlinedInput
                                 id="tentSearchId"
@@ -146,7 +146,7 @@ const IndexPage = () => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} md={8} lg={6}>
                         <Box px={2}>
                             OR
                             <StyledButton

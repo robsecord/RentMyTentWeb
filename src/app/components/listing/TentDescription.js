@@ -215,10 +215,10 @@ const TentDescription = ({ next }) => {
 
     return (
         <>
-            <Box py={1}>
+            <Box pb={3}>
                 <Grid container spacing={3} className={classes.gridRow}>
                     <Grid item xs={12} sm={6}>
-                        <Grid container spacing={3} className={classes.gridRow}>
+                        <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <TextField
                                     id="tentTypeDesc"
@@ -341,22 +341,9 @@ const TentDescription = ({ next }) => {
                 </Grid>
             </Box>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
             <Divider />
 
-            <Box py={2}>
+            <Box>
                 <Grid container spacing={3} className={classes.gridRow}>
                     <Grid item xs={12} sm={6}>
                         &nbsp;

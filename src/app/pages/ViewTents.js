@@ -1,15 +1,20 @@
 // Frameworks
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import UseAnimations from 'react-useanimations';
-import * as _ from 'lodash';
+import { navigate } from 'gatsby';
 
 // Material UI
 import Alert from '@material-ui/lab/Alert';
+import Box from '@material-ui/core/Box';
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 
 // App Components
 import SEO from '../../common/seo';
 import { AppTabs } from '../components/AppTabs';
+
+// Common
+import { GLOBALS } from '../../utils/globals';
 
 // Data Context for State
 import { WalletContext } from '../stores/wallet.store';
@@ -23,26 +28,45 @@ const ViewTents = ({ location }) => {
     const classes = useRootStyles();
 
     const [ walletState ] = useContext(WalletContext);
-    const { allReady, connectedAddress } = walletState;
+    const { allReady } = walletState;
 
+    const _onRedirect = (route = '/') => (evt) => {
+        evt.preventDefault();
+        navigate(route)
+    };
 
     const _getContent = () => {
-        if (!allReady) {
-            return (
-                <Alert
-                    variant="outlined"
-                    severity="warning"
-                    icon={<UseAnimations animationKey="alertTriangle" size={24} />}
-                >
-                    You must connect your account in order to Rent Tents!
-                </Alert>
-            );
-        }
-
         return (
-            <Typography variant={'body1'} component={'p'}>
-                Address: {connectedAddress}
-            </Typography>
+            <>
+                {
+                    !allReady && (
+                        <Alert
+                            variant="outlined"
+                            severity="warning"
+                            icon={<UseAnimations animationKey="alertTriangle" size={24} />}
+                        >
+                            You must connect your account in order to Rent Tents!
+                        </Alert>
+                    )
+                }
+                <Box py={3}>
+                    <Typography variant={'h6'} component={'p'}>
+                        Coming Soon!
+                    </Typography>
+
+                    <Typography variant={'body1'} component={'p'}>
+                        Start by creating a&nbsp;
+                        <Link href="#" onClick={_onRedirect(`${GLOBALS.APP_ROOT}/list`)}>
+                            Tent Listing
+                        </Link>
+                    </Typography>
+
+                    <Typography variant={'body1'} component={'p'}>
+                        You may also find Tents available on 3rd-party Marketplaces such as&nbsp;
+                        <Link href="https://opensea.io/" target="_new">OpenSea</Link>
+                    </Typography>
+                </Box>
+            </>
         );
     };
 

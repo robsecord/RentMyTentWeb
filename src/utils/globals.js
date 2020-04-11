@@ -5,7 +5,7 @@ export const GLOBALS = {};
 
 GLOBALS.CODENAME = 'RentMyTent';
 GLOBALS.CODENAME_ABBR = 'RMT';
-GLOBALS.CODE_VERSION = 'v0.0.1';
+GLOBALS.CODE_VERSION = 'v0.1.2';
 GLOBALS.BASE_URL = 'https://rent-my-tent.eth.link';
 GLOBALS.APP_ROOT = '/app';
 GLOBALS.CODE_VERSION_MAJOR = _.join(_.split(GLOBALS.CODE_VERSION.replace('v',''), '.', 1), '.');

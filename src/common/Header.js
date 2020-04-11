@@ -3,38 +3,50 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 
+// Logo Image
+import Logo from '../images/logo/Rent-my-tent.svg';
 
-const Header = ({siteTitle, onRedirect}) => (
-    <header
-        style={{
-            background: `black`,
-            marginBottom: `1.45rem`,
-        }}
-    >
-        <div
-            style={{
-                margin: `0 auto`,
-                maxWidth: 960,
-                padding: `1.45rem 1.0875rem`,
-            }}
-        >
-            <h1 style={{margin: 0}}>
-                <Link
-                    href="#"
-                    onClick={onRedirect()}
-                    style={{
-                        color: `white`,
-                        textDecoration: `none`,
-                    }}
-                >
-                    {siteTitle}
-                </Link>
-            </h1>
-        </div>
-    </header>
-);
+// Common
+import { GLOBALS } from '../utils/globals';
+
+// Custom Theme
+import useLandingStyles from '../layout/styles/landing.styles';
+
+
+const Header = ({siteTitle, onRedirect}) => {
+    const classes = useLandingStyles();
+    return (
+        <header className={classes.heroHeader}>
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+            >
+                <a href={'#'} onClick={onRedirect()} className={classes.heroLogo}>
+                    <Logo className={classes.heroLogoImg} />
+                </a>
+
+                <div className={classes.heroMenu}>
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect('about')}>
+                        About
+                    </Link>
+
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect('how')}>
+                        How it works
+                    </Link>
+
+                    <Link href="#" className={classes.heroMenuLink} onClick={onRedirect(`${GLOBALS.APP_ROOT}/list`)}>
+                        Get Started
+                    </Link>
+                </div>
+            </Grid>
+        </header>
+    );
+};
 
 Header.propTypes = {
     siteTitle: PropTypes.string.isRequired,
