@@ -1,6 +1,7 @@
 // Frameworks
 import React, { useContext } from 'react';
 import UseAnimations from 'react-useanimations';
+import { navigate } from 'gatsby';
 
 // Material UI
 import Alert from '@material-ui/lab/Alert';
@@ -11,6 +12,9 @@ import Typography from '@material-ui/core/Typography';
 // App Components
 import SEO from '../../common/seo';
 import { AppTabs } from '../components/AppTabs';
+
+// Common
+import { GLOBALS } from '../../utils/globals';
 
 // Data Context for State
 import { WalletContext } from '../stores/wallet.store';
@@ -25,6 +29,11 @@ const ViewTents = ({ location }) => {
 
     const [ walletState ] = useContext(WalletContext);
     const { allReady } = walletState;
+
+    const _onRedirect = (route = '/') => (evt) => {
+        evt.preventDefault();
+        navigate(route)
+    };
 
     const _getContent = () => {
         return (
@@ -46,7 +55,14 @@ const ViewTents = ({ location }) => {
                     </Typography>
 
                     <Typography variant={'body1'} component={'p'}>
-                        You might find Tents available on 3rd-party Marketplaces such as&nbsp;
+                        Start by creating a&nbsp;
+                        <Link href="#" onClick={_onRedirect(`${GLOBALS.APP_ROOT}/list`)}>
+                            Tent Listing
+                        </Link>
+                    </Typography>
+
+                    <Typography variant={'body1'} component={'p'}>
+                        You may also find Tents available on 3rd-party Marketplaces such as&nbsp;
                         <Link href="https://opensea.io/" target="_new">OpenSea</Link>
                     </Typography>
                 </Box>

@@ -1,7 +1,6 @@
 // Frameworks
 import React from 'react';
 import PropTypes from 'prop-types';
-import { navigate } from 'gatsby';
 
 // Material UI
 import Grid from '@material-ui/core/Grid';
