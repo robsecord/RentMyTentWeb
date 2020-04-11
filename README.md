@@ -1,4 +1,4 @@
-## Rent My Tent - Ethereum Dapp v0.1.1
+## Rent My Tent - Ethereum Dapp v0.1.2
 
 A **Progressive Web App** for **Selling & Renting Tents**, reducing the amount of one-time-use tents that get abandoned - **No Tent Left Behind**!
 
